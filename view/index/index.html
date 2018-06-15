@@ -1,0 +1,59 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>车站服务一部信息管理系统 </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="/static//assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+    <link href="/static//assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+    <link href="/static//assets/css/main-min.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="../../static//assets/js/jquery-1.8.1.min.js"></script>
+	<script type="text/javascript" src="../../static//assets/js/bui-min.js"></script>
+	<script type="text/javascript" src="../../static//assets/js/common/main-min.js"></script>
+	<script type="text/javascript" src="../../static//assets/js/config-min.js"></script>
+	<script type="text/javascript" src="../../static/Js/bootstrap.js"></script>
+</head>
+<body>
+<div class="header">
+    <div class="dl-title">
+        <!-- <img src="/static/assets/img/top.png">  -->
+          <a href="http://10.101.137.102/" title="门户地址" target="_blank">
+	          <span class="lp-title-port">
+	          	<img src="/static/assets/img/GZ-metro-logo.gif">
+	          </span>
+	          <span class="dl-title-text">
+	        	  车站服务一部信息管理系统V1.0
+	          </span> 
+          </a>
+    </div>
+    <div class="dl-log">
+    	欢迎您，
+    	<span class="dl-log-user">{$userName}</span>
+    	<span class="dl-log-user">当前角色：{$userAuth}</span>
+    	<!--  <span class="dl-log-user"><a style="color:#FFF" onclick="updataPassword('{$userID}');">[修改密码]</a></span>-->
+    	<a href="/index/Login/signOut" title="退出系统" class="dl-log-quit">[退出]</a>
+    </div>
+</div>
+<div class="content">
+    <div class="dl-main-nav">
+        <div class="dl-inform"><div class="dl-inform-title"><s class="dl-inform-icon dl-up"></s></div></div>
+        <ul id="J_Nav"  class="nav-list ks-clear">{$navigation}</ul>
+    </div>
+    <ul id="J_NavContent" class="dl-tab-conten">
+			
+    </ul>
+</div>
+
+
+<script>
+	BUI.use('common/main',function(){
+        //var config = [{id:'1',menu:[{text:'行政管理',items:[{id:'12',text:'机构管理',href:'../Node/index'},{id:'3',text:'角色管理',href:'../Role/index'},{id:'4',text:'用户管理',href:'../User/index.html'},{id:'6',text:'菜单管理',href:'../Menu/index.html'}]}]},{id:'7',homePage : '9',menu:[{text:'业务管理',items:[{id:'9',text:'查询业务',href:'../Node/index.html'}]}]}];
+		{$config};
+        new PageUtil.MainPage({
+            modulesConfig : config
+        });
+    });
+</script>
+
+</body>
+</html>

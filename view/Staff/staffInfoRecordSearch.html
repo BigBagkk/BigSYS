@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap-datepicker.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap-responsive.css" />
+<link rel="stylesheet" type="text/css" href="../../static/Css/style.css" />
+
+<link rel="stylesheet" type="text/css"
+	href="../../DataTables/media/css/jquery.dataTables.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../DataTables/media/css/dataTables.bootstrap.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../DataTables/Buttons-1.4.2/css/buttons.dataTables.min.css" />
+	
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/media/js/jquery.js"></script>
+
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/media/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/media/js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/Buttons-1.4.2/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/Buttons-1.4.2/js/buttons.flash.min.js"></script>
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/media/js/dataTables.select.min.js"></script>
+
+
+<!--<script type="text/javascript" src="../../static/Js/jquery.js"></script>  -->
+<script type="text/javascript" src="../../static/Js/bootstrap.js"></script>
+<script type="text/javascript" src="../../static/Js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="../../static/Js/bootstrap-datepicker.zh-CN.min.js"></script>
+<script type="text/javascript" src="../../static/Js/ckform.js"></script>
+<script type="text/javascript" src="../../static/Js/common.js"></script>
+<script type="text/javascript" src="../../static/Js/jquery.form.min.js"></script>
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<table id="tableStaffInfoList" class="display" cellspacing="0"
+			width="100%">
+			<thead>
+				<tr>
+					<th>部门</th>
+					<th>分部、中心站</th>
+					<th>班组</th>
+					<th>员工号</th>
+					<th>姓名</th>
+					<th>短号</th>
+					<th>手机号</th>
+					<th>操作</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<th>部门</th>
+					<th>分部、中心站</th>
+					<th>班组</th>
+					<th>员工号</th>
+					<th>姓名</th>
+					<th>短号</th>
+					<th>手机号</th>
+					<th>操作</th>
+					<th>操作</th>
+				</tr>
+			</tfoot>
+			<tbody align="center"></tbody>
+		</table>
+	</div>
+	<div id="content" style="margin: 10px"></div>
+	
+	
+	<!-- 模态对话框显示内容  -->
+	<!-- Modal -->	
+	<div id="addModal" class="modal hide fade" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">×</button>
+			<h3 id="addModalLabel">添加人员</h3>
+		</div>
+		<div class="modal-body">
+			<table>
+				<tr>
+					<td><p>员工号</p></td>
+					<td><input id="addModalText" type="text" placeholder="新增部门名称"></td>
+
+					
+				</tr>
+			</table>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			<button id = "addSave"class="btn btn-primary">保存</button>
+		</div>
+	</div>
+	<!-- 模态对话框显示内容  -->
+	
+	
+	<!-- 模态对话框显示内容  -->
+	<!-- Modal -->
+	<div id="editModal" class="modal hide fade"  role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true" ><!-- tabindex="-1"style="width:1100px,margin-left:20px" -->
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">×</button>
+			<h3 id="addModalLabel">员工信息详情</h3>
+		</div>
+		<div class="modal-body">
+		<form enctype="multipart/form-data" id = "editForm">
+			<table >
+			    <tr>
+			    	<td style=" text-align:right"><h5>员工号:</h5></td>
+					<td><input type ="text" name ="textUserID"  id="textUserID" width="50px"></input></td>
+					<td style=" text-align:right"><h5>姓名:</h5></td>
+					<td><input type ="text"  name="textName"  id="textName"></input></td>
+					<td style=" text-align:right"><h5>姓名缩写:</h5></td>
+					<td><input type ="text" name="textNameAbbreviation"   id="textNameAbbreviation"></input></td>
+				</tr>
+			    <!--<tr>
+			    	<td style=" text-align:right"><h5>部门:</h5></td>
+			    	<td><select style="width: 200px;"name="modalSelectDepartmentList" id="modalSelectDepartmentList"></select></td>
+					<td style=" text-align:right"><h5>分部、中心站:</h5></td>
+					<td><select style="width: 200px;" name="modalSelectSubsectionList" id="modalSelectSubsectionList"></select></td>
+					<td style=" text-align:right"><h5>班组:</h5></td>
+					<td><select style="width: 200px;"name ="modalSelectTeamList" id="modalSelectTeamList"></select></td>
+				</tr>
+			    <tr>
+			    	<td style=" text-align:right"><h5>岗位:</h5></td>
+			    	<td><select style="width: 200px;"name="modalSelectPostList" id="modalSelectPostList"></select></td>
+					<td style=" text-align:right"><h5>岗位职级:</h5></td>
+					<td><select style="width: 200px;" name="modalSelectRankList"id="modalSelectRankList"></select></td>
+					<td style=" text-align:right"><h5>性别:</h5></td>
+					<td><select style="width: 200px;" name="modalSelectSexList" id="modalSelectSexList"></select></td>
+				</tr>
+				<tr>
+			    	<td style=" text-align:right"><h5>出生年月:</h5></td>
+			    	<td><input type="text" name ="datepickerBirthday" id ="datepickerBirthday" class="datepicker" placeholder="请选择日期" /></td>
+					<td style=" text-align:right"><h5>入司日期:</h5></td>
+					<td><input type="text" name ="datepickerIndate" id ="datepickerIndate" class="datepicker" placeholder="请选择日期" /></td>
+					<td style=" text-align:right"><h5>现岗位起聘日期:</h5></td>
+					<td><input type="text" name ="datepickerOndate" id ="datepickerOndate" class="datepicker" placeholder="请选择日期" /></td>
+				</tr>
+				<tr>
+			    	<td style=" text-align:right"><h5>大学生信息:</h5></td>
+					<td><input type ="text" name="textAcademician"  id="textAcademician" width="50px"></input></td>
+					<td style=" text-align:right"><h5>班别:</h5></td>
+					<td><input type ="text"  name="textClass"  id="textClass"></input></td>
+					<td style=" text-align:right"><h5>是否不在岗:</h5></td>
+					<td><select style="width: 200px;" name="modalSelectNotOnTheJobList" id="modalSelectNotOnTheJobList"></select></td>
+				</tr>
+				<tr>
+					<td style=" text-align:right"><h5>常用手机号码:</h5></td>
+					<td><input type ="text"   name="textAlwaysPhoneNumber" id="textAlwaysPhoneNumber" width="50px"></input></td>
+					<td style=" text-align:right"><h5>婚姻情况:</h5></td>
+					<td><select style="width: 200px;"name="modalSelectMaritalList" id="modalSelectMaritalList"></select></td>
+					<td style=" text-align:right"><h5>籍贯:</h5></td>
+					<td><input type ="text" name="textJIGUAN"  id="textJIGUAN" width="50px"></input></td>
+				</tr>
+				<tr>
+					<td style=" text-align:right"><h5>政治面貌:</h5></td>
+					<td><select style="width: 200px;"name="modalSelectPoliticsList" id="modalSelectPoliticsList"></select></td>
+					<td style=" text-align:right"><h5>民族:</h5></td>
+					<td><select style="width: 200px;"name="modalSelectNationList" id="modalSelectNationList"></select></td>
+					<td style=" text-align:right"><h5>户籍性质:</h5></td>
+					<td><select style="width: 200px;"name="modalSelectHouseholdRegisterList" id="modalSelectHouseholdRegisterList"></select></td>
+				</tr>
+				 <tr>
+					<td style=" text-align:right"><h5>学历:</h5></td>
+					<td><select style="width: 200px;"name="modalSelectEducationBackgroundList" id="modalSelectEducationBackgroundList"></select></td>
+					<td style=" text-align:right"><h5>毕业院校:</h5></td>
+					<td><textarea rows="2"name="textareaSchool" id="textareaSchool"></textarea></td>
+					<td style=" text-align:right"><h5>专业 :</h5></td>
+					<td><textarea rows="2"name="textareaMajor" id="textareaMajor"></textarea></td>
+				</tr>
+				 <tr>
+			    	<td style=" text-align:right"><h5>短号:</h5></td>
+					<td><input type ="text"  name="textShortPhoneNumber"  id="textShortPhoneNumber" width="50px"></input></td>
+					<td style=" text-align:right"><h5>紧急联系人:</h5></td>
+					<td><input type ="text"  name="textEmergencyPersonName"  id="textEmergencyPersonName"></input></td>
+					<td style=" text-align:right"><h5>紧急联系人电话:</h5></td>
+					<td><input type ="text"  name="textEmergencyPersonPhoneNumber"  id="textEmergencyPersonPhoneNumber"></input></td>
+				</tr>
+				<tr>
+					<td style=" text-align:right"><h5>本地常住地址:</h5></td>
+					<td><textarea rows="3"name = "textareaAlwaysLive" id = "textareaAlwaysLive"></textarea></td>
+					<td style=" text-align:right"><h5>户口所在地:</h5></td>
+					<td><textarea rows="3" name = "textareaHouseholdRegisterAddress" id = "textareaHouseholdRegisterAddress"></textarea></td>
+					<td style=" text-align:right"><h5>家乡地址:</h5></td>
+					<td><textarea rows="3" name = "textareaHometown"  id = "textareaHometown"></textarea></td>
+				</tr>-->
+			</table>
+		  </form>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			<button id = "editSave"class="btn btn-primary">更新</button>
+		</div>
+	</div>
+	<!-- 模态对话框显示内容  -->
+</body>
+</html>
+<script>
+	$(document).ready(function(){
+		datapickerInit();
+	    //使用表格控件DataTables配置项
+	    var data = {$selectStaffInfo}; 
+	    var table =  $('#tableStaffInfoList').DataTable({
+	    	data: data,
+	    	columns: [
+	                  { sWidth: "50px",data: 'department_info' },
+	                  { sWidth: "50px",data: 'subsection_info' },
+	                  { sWidth: "50px",data: 'team_info' },
+	                  { sWidth: "50px",data: 'staff_info_employee_id' },
+	                  { sWidth: "50px",data: 'staff_info_name' },
+	                  { sWidth: "50px",data: 'staff_info_short_phone_number' },
+	                  { sWidth: "50px",data: 'staff_info_always_phone_number' },
+                      { sWidth: "20px",mRender: function(data, type,full,meta) {  
+                    	  //使用JSON.stringify(full)方法，将对象full转为JSON数据格式，作为函数参数传递
+                          return "<a href ='#'  class='btn btn-info btn-lg' onclick='return editSingle("+JSON.stringify(full)+")'><span class='icon-edit'></span>详情</a>";  
+                      	}
+                      },
+                      { sWidth: "20px",mRender: function(data, type,row, full) { 
+                          return '<a href ="#"  class="btn btn-danger btn-lg" onclick="return delSingle('+row.staff_info_employee_id+');"><span class="icon-edit"></span>删除</a>';  
+                      	}
+                      }
+	              ],
+            iDisplayLength : 10, //默认显示的记录数 
+	    	bProcessing: true, //DataTables载入数据时，是否显示‘进度’提示  
+	    	bPaginate: true, //翻页功能
+	    	bLengthChange: true, //改变每页显示数据数量
+	    	bFilter: true, //过滤功能
+	    	bSort: true, //排序功能
+	    	bInfo: true,//页脚信息
+	    	bAutoWidth: true,//自动宽度
+	    	sPaginationType: "full_numbers",//显示数字的翻页样式
+	    		oLanguage: {
+	    			sLengthMenu: "每页显示 _MENU_ 条记录",
+	    			sZeroRecords: "抱歉， 没有找到",
+	    			sInfo: "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+	    			//sInfoEmpty: "没有数据",
+	    			sInfoFiltered: "(从 _MAX_ 条数据中检索)",
+	    			oPaginate: {
+	    			sFirst: "首页",
+	    			sPrevious: "前一页",
+	    			sNext: "后一页",
+	    			sLast: "尾页"
+	    			},
+	    			sZeroRecords: "没有检索到数据",
+	    			sProcessing : "正在获取数据，请稍后..."
+	    	},
+ 			//dom: '<"clear">lfrtip',
+ 			select: true,
+	       dom: 'B<"top"lf>rt<"bottom"ip><"clear">',
+	       buttons: {
+	           buttons: [
+	               {
+	                   text: '新增',
+	                   classname:'btn btn-info btn-lg',
+	                   action: function ( dt ) {
+	                       //alert(dt.column(2).data());
+	                       //alert(this.column(2).data());
+	                	   //this.disable();
+	        			   $('#addModal').modal({
+	        				   //keyboard: false
+	        				 });
+	                   }
+	               }
+	           ]
+	       }
+/*	        buttons: {
+	            name: 'primary',
+	            buttons: [ 'copy', 'csv', 'excel' ]
+	        }*/
+	     		//dom: 'Bfrtip',
+	     		/* buttons: [
+	     		          {
+	     		              extend: 'excel',
+	     		              text: '导出',
+	     		              exportOptions: {
+	     		                  modifier: {
+	     		                      page: 'current'
+	     		                  }
+	     		              }
+	     		          }
+	     		      ]
+	    		*/
+	    });// $('#tableDepartmentList').DataTable结尾	
+		//绑定模态对话框   编辑   按钮
+		$('#addSave').bind('click', function() {
+			if($('#addModalText').val()=="")
+				{
+					alert("新增部门名称不能为空！！");
+					return;
+				}
+			var data = {
+					departmentName : $('#addModalText').val()
+				};
+			
+			$.ajax({
+				type : 'post',
+				data : data,
+				url : '/index/Staff/departmentAdd',
+				cache : false,
+				success : function(msg) {
+					if(msg)
+						{
+							//$('#addSave').modal('toggle');
+							$('#addModal').modal('hide');
+						}
+					else{
+						alert("新增失败！！");
+					}
+				}
+			});
+		});
+		/*
+		 *  绑定模态对话框   ---------更新-----------  按钮
+		*/
+		$('#editSave').bind('click', function() {
+			
+            $("#editForm").ajaxSubmit({
+            	url: '/index/Staff/updataStaffInfo', /*设置post提交到的页面*/
+                success: function (data) {
+                	if(data)
+                		{
+                			alert("更新成功！！！");
+                		}
+                	else
+                		{
+                			alert("更新失败！！！");
+                		}
+                	
+                },
+                error: function (error) {
+                	//$('#content').empty();
+					//$('#content').html(error); 
+					
+				},
+                type: "post", /*设置表单以post方法提交*/
+                dataType: "json" /*设置返回值类型为文本*/
+            });
+			
+			
+		});
+		//新增弹框页面：：关闭后触发事件
+	    $('#addModal').on('hidden', function () {
+	    	reflashMain();
+	      });
+		//详情弹框页面：：关闭后触发事件
+	    $('#editModal').on('hidden', function () {
+	    	reflashMain();
+	      });
+		
+	 });/*初始化末尾*/	    
+		/*
+		* 每行点击详情按钮，展示个人信息
+		*/
+		function editSingle(row)
+		{
+		 	//显示模态对话框，并设置位置
+		 	// $('#editModal').modal('show').css({
+		 	//			"width": '1200px',
+		 	//	  		"margin-left": "-600px"
+            //        }); 
+
+			 //$('#editModal').modal();
+			 $('#addModal').modal();
+			 $('#textUserID').val(row.staff_info_employee_id);		 	 
+			 $('#textName').val(row.staff_info_name);		 	 
+			 $('#textNameAbbreviation').val(row.staff_info_name_abbreviation);
+			 $('#textAcademician').val(row.staff_info_academician);
+			 $('#textClass').val(row.staff_info_class);
+			 $('#textAlwaysPhoneNumber').val(row.staff_info_always_phone_number);
+			 $('#textJIGUAN').val(row.staff_info_JIGUAN);
+			 $('#textareaSchool').val(row.staff_info_school);
+			 $('#textareaMajor').val(row.staff_info_major);
+			 $('#textShortPhoneNumber').val(row.staff_info_major);
+			 $('#textEmergencyPersonName').val(row.staff_info_emergency_person_name);
+			 $('#textEmergencyPersonPhoneNumber').val(row.staff_info_emergency_person_phone_number);
+			 $('#textareaAlwaysLive').val(row.staff_info_always_live );
+			 $('#textareaHouseholdRegisterAddress').val(row.staff_info_household_register_address);
+			 $('#textareaHometown').val(row.staff_info_hometown);
+			 $('#textShortPhoneNumber').val(row.staff_info_short_phone_number);
+			 
+			 $('#datepickerBirthday').datepicker("setDate",row.staff_info_birthday);//设置生日日期
+			 $('#datepickerIndate').datepicker("setDate",row.staff_info_in_company_date);//设置入司时间
+			 $('#datepickerOndate').datepicker("setDate",row.staff_info_on_post_date);//设置现岗位聘任时间
+			 
+		 	 getModalDepartmentList(row.staff_info_department);
+		 	 getModalSubsectionList(row.staff_info_subsection);
+		 	 getModalTeamList(row.staff_info_team);
+		 	 getModalPostList(row.staff_info_post);
+		 	 
+		 	 getModalRankList(row.staff_info_rank);
+		 	 getModalSexList(row.staff_info_sex);
+		 	 getModalNotOnTheJobList(row.staff_info_not_on_the_job);
+		 	 getModalMaritalList(row.staff_info_marital);
+		 	 getModalPoliticsList(row.staff_info_politics);
+		 	 getModalNationList(row.staff_info_nation);
+		 	 getModalHouseholdRegisterList(row.staff_info_household_register);
+		 	 getModalEducationBackgroundList(row.staff_info_education_background);
+		};
+		function delSingle(id)
+		{
+			var data = {
+					staffID : id
+				};
+			$.ajax({
+				type : 'post',
+				data : data,
+				url : '/index/Staff/staffInfoRecordDelete',
+				cache : false,
+				success : function(msg) {
+					if(msg)
+					{
+						reflashMain();
+					}
+					else{
+						alert("删除失败！！");
+					}
+				}
+			});
+		};
+		//相当于刷新页面，重新查询显示
+		function reflashMain()
+		{
+			var selectDepartmentID = $('#selectDepartmentList').val();
+			//var selectSubsectionID = $('#selectSubsectionList').val();
+			//var selectTeamID = $('#selectTeamList').val();
+			//var textUserName = $('#userName').val();
+			//var textUserID = $('#userID').val();
+			if (selectDepartmentID == 0) {
+				alert("请选择部门信息！！");
+				return;
+			}
+			var data = {
+				departmentID : $('#selectDepartmentList').val(),
+				subsectionID : $('#selectSubsectionList').val(),
+				teamID : $('#selectTeamList').val(),
+				userName : $('#userName').val(),
+				userID : $('#userID').val()
+			};
+			$.ajax({
+				type : 'post',
+				data : data,
+				url : '/index/Staff/staffInfoRecordSearch',
+				cache : false,
+				success : function(msg) {
+					$('#content').empty();
+					$('#content').html(msg);
+				}
+			});
+		}
+		function datapickerInit(){
+			 $(".datepicker").datepicker({
+		            language: "zh-CN",
+		            autoclose: true,//选中之后自动隐藏日期选择框
+		            clearBtn: true,//清除按钮
+		            //todayBtn: true,//今日按钮
+		            format: "yyyy-mm-dd"//日期格式，详见 http://bootstrap-datepicker.readthedocs.org/en/release/options.html#format
+		        	});
+		}
+		function getModalDepartmentList(val) {
+			$.ajax({
+				type : 'post',
+				url : '/index/Staff/getDepartmentInfoList',
+				cache : false,
+				success : function(msg) {
+					$('#modalSelectDepartmentList').empty();
+					var str = "<option  value=" + '0' + ">" + "——请选择部门——"
+							+ "</option>";
+					$(str).appendTo("#modalSelectDepartmentList");
+					$(msg).each(
+							function(i, item) {
+	    						if(item.id ==val )
+    							{
+	    							var str = "<option  value=" + item.id + " selected=\"selected\" >"
+    								+ item.department_info + "</option>";
+    							}
+    						else
+    							{
+	    							var str = "<option  value=" + item.id + ">"
+    								+ item.department_info + "</option>";
+    							}
+	    						$(str).appendTo("#modalSelectDepartmentList");
+							});
+				}
+			});
+		}
+		function getModalSubsectionList(val) {
+			$.ajax({
+				type : 'post',
+				url : '/index/Staff/getSubsectionInfoList',
+				cache : false,
+				success : function(msg) {
+					$('#modalSelectSubsectionList').empty();
+					var str = "<option  value=" + '0' + ">" + "——请选择分部、中心站——"
+							+ "</option>";
+					$(str).appendTo("#modalSelectSubsectionList");
+					$(msg).each(
+							function(i, item) {
+	    						if(item.id ==val )
+    							{
+	    							var str = "<option  value=" + item.id + " selected=\"selected\" >"
+    								+ item.subsection_info + "</option>";
+    							}
+    						else
+    							{
+	    							var str = "<option  value=" + item.id + ">"
+    								+ item.subsection_info + "</option>";
+    							}
+	    						$(str).appendTo("#modalSelectSubsectionList");
+							});
+				}
+			});
+		}
+		function getModalTeamList(val) {
+			$.ajax({
+				type : 'post',
+				url : '/index/Staff/getTeamInfoList',
+				cache : false,
+				success : function(msg) {
+					$('#modalSelectTeamList').empty();
+					var str = "<option  value=" + '0' + ">" + "——请选择班组——"
+							+ "</option>";
+					$(str).appendTo("#modalSelectTeamList");
+					$(msg).each(
+							function(i, item) {
+	    						if(item.id ==val )
+    							{
+	    							var str = "<option  value=" + item.id + " selected=\"selected\" >"
+    								+ item.team_info + "</option>";
+    							}
+    						else
+    							{
+	    							var str = "<option  value=" + item.id + ">"
+    								+ item.team_info + "</option>";
+    							}
+	    						$(str).appendTo("#modalSelectTeamList");
+							});
+				}
+			});
+		}
+		function getModalPostList(val) {
+			$.ajax({
+				type : 'post',
+				url : '/index/Staff/getPostInfoList',
+				cache : false,
+				success : function(msg) {
+					$('#modalSelectPostList').empty();
+					var str = "<option  value=" + '0' + ">" + "——请选择岗位——"
+							+ "</option>";
+					$(str).appendTo("#modalSelectPostList");
+					$(msg).each(
+							function(i, item) {
+	    						if(item.id ==val )
+    							{
+	    							var str = "<option  value=" + item.id + " selected=\"selected\" >"
+    								+ item.post_info + "</option>";
+    							}
+    						else
+    							{
+	    							var str = "<option  value=" + item.id + ">"
+    								+ item.post_info + "</option>";
+    							}
+	    						$(str).appendTo("#modalSelectPostList");
+							});
+				}
+			});
+		}
+	 	function getModalRankList(val){
+				$.ajax({
+					type : 'post',
+					url : '/index/Staff/getRankInfoList',
+					cache : false,
+					success : function(msg) {
+						$('#modalSelectRankList').empty();
+						var str = "<option  value=" + '0' + ">" + "——请选择岗位职级——"
+								+ "</option>";
+						$(str).appendTo("#modalSelectRankList");
+						$(msg).each(
+								function(i, item) {
+		    						if(item.id ==val )
+	    							{
+		    							var str = "<option  value=" + item.id + " selected=\"selected\" >"
+	    								+ item.rank_info + "</option>";
+	    							}
+	    						else
+	    							{
+		    							var str = "<option  value=" + item.id + ">"
+	    								+ item.rank_info + "</option>";
+	    							}
+		    						$(str).appendTo("#modalSelectRankList");
+								});
+					}
+				});
+			}
+	 	function getModalSexList(val){
+				$.ajax({
+					type : 'post',
+					url : '/index/Staff/getSexInfoList',
+					cache : false,
+					success : function(msg) {
+						$('#modalSelectSexList').empty();
+						var str = "<option  value=" + '0' + ">" + "——请选择性别——"
+								+ "</option>";
+						$(str).appendTo("#modalSelectSexList");
+						$(msg).each(
+								function(i, item) {
+		    						if(item.id ==val )
+	    							{
+		    							var str = "<option  value=" + item.id + " selected=\"selected\" >"
+	    								+ item.sex_info + "</option>";
+	    							}
+	    						else
+	    							{
+		    							var str = "<option  value=" + item.id + ">"
+	    								+ item.sex_info + "</option>";
+	    							}
+		    						$(str).appendTo("#modalSelectSexList");
+								});
+					}
+				});
+			}
+	 	function getModalNotOnTheJobList(val){
+				$.ajax({
+					type : 'post',
+					url : '/index/Staff/getNotOnTheJobInfoList',
+					cache : false,
+					success : function(msg) {
+						$('#modalSelectNotOnTheJobList').empty();
+						var str = "<option  value=" + '0' + ">" + "——请选择是否不在岗——"
+								+ "</option>";
+						$(str).appendTo("#modalSelectNotOnTheJobList");
+						$(msg).each(
+								function(i, item) {
+		    						if(item.id ==val )
+	    							{
+		    							var str = "<option  value=" + item.id + " selected=\"selected\" >"
+	    								+ item.not_on_the_job_info + "</option>";
+	    							}
+	    						else
+	    							{
+		    							var str = "<option  value=" + item.id + ">"
+	    								+ item.not_on_the_job_info + "</option>";
+	    							}
+		    						$(str).appendTo("#modalSelectNotOnTheJobList");
+								});
+					}
+				});
+			}
+	 	function getModalMaritalList(val){
+				$.ajax({
+					type : 'post',
+					url : '/index/Staff/getMaritalInfoList',
+					cache : false,
+					success : function(msg) {
+						$('#modalSelectMaritalList').empty();
+						var str = "<option  value=" + '0' + ">" + "——请选择婚姻情况——"
+								+ "</option>";
+						$(str).appendTo("#modalSelectMaritalList");
+						$(msg).each(
+								function(i, item) {
+		    						if(item.id ==val )
+	    							{
+		    							var str = "<option  value=" + item.id + " selected=\"selected\" >"
+	    								+ item.marital_info + "</option>";
+	    							}
+	    						else
+	    							{
+		    							var str = "<option  value=" + item.id + ">"
+	    								+ item.marital_info + "</option>";
+	    							}
+		    						$(str).appendTo("#modalSelectMaritalList");
+								});
+					}
+				});
+			}
+	 	function getModalPoliticsList(val){
+				$.ajax({
+					type : 'post',
+					url : '/index/Staff/getPoliticsInfoList',
+					cache : false,
+					success : function(msg) {
+						$('#modalSelectPoliticsList').empty();
+						var str = "<option  value=" + '0' + ">" + "——请选择政治面貌——"
+								+ "</option>";
+						$(str).appendTo("#modalSelectPoliticsList");
+						$(msg).each(
+								function(i, item) {
+		    						if(item.id ==val )
+	    							{
+		    							var str = "<option  value=" + item.id + " selected=\"selected\" >"
+	    								+ item.politics_info + "</option>";
+	    							}
+	    						else
+	    							{
+		    							var str = "<option  value=" + item.id + ">"
+	    								+ item.politics_info + "</option>";
+	    							}
+		    						$(str).appendTo("#modalSelectPoliticsList");
+								});
+					}
+				});
+			}
+	 	function getModalNationList(val){
+				$.ajax({
+					type : 'post',
+					url : '/index/Staff/getNationInfoList',
+					cache : false,
+					success : function(msg) {
+						$('#modalSelectNationList').empty();
+						var str = "<option  value=" + '0' + ">" + "——请选择民族——"
+								+ "</option>";
+						$(str).appendTo("#modalSelectNationList");
+						$(msg).each(
+								function(i, item) {
+		    						if(item.id ==val )
+	    							{
+		    							var str = "<option  value=" + item.id + " selected=\"selected\" >"
+	    								+ item.nation_info + "</option>";
+	    							}
+	    						else
+	    							{
+		    							var str = "<option  value=" + item.id + ">"
+	    								+ item.nation_info + "</option>";
+	    							}
+		    						$(str).appendTo("#modalSelectNationList");
+								});
+					}
+				});
+			}
+	 	function getModalHouseholdRegisterList(val){
+				$.ajax({
+					type : 'post',
+					url : '/index/Staff/getHouseholdRegisterInfoList',
+					cache : false,
+					success : function(msg) {
+						$('#modalSelectHouseholdRegisterList').empty();
+						var str = "<option  value=" + '0' + ">" + "——请选择户籍性质——"
+								+ "</option>";
+						$(str).appendTo("#modalSelectHouseholdRegisterList");
+						$(msg).each(
+								function(i, item) {
+		    						if(item.id ==val )
+	    							{
+		    							var str = "<option  value=" + item.id + " selected=\"selected\" >"
+	    								+ item.household_register_info + "</option>";
+	    							}
+	    						else
+	    							{
+		    							var str = "<option  value=" + item.id + ">"
+	    								+ item.household_register_info + "</option>";
+	    							}
+		    						$(str).appendTo("#modalSelectHouseholdRegisterList");
+								});
+					}
+				});
+			}
+	 	function getModalEducationBackgroundList(val){
+				$.ajax({
+					type : 'post',
+					url : '/index/Staff/getEducationBackgroundInfoList',
+					cache : false,
+					success : function(msg) {
+						$('#modalSelectEducationBackgroundList').empty();
+						var str = "<option  value=" + '0' + ">" + "——请选择学历——"
+								+ "</option>";
+						$(str).appendTo("#modalSelectEducationBackgroundList");
+						$(msg).each(
+								function(i, item) {
+		    						if(item.id ==val )
+	    							{
+		    							var str = "<option  value=" + item.id + " selected=\"selected\" >"
+	    								+ item.education_info + "</option>";
+	    							}
+	    						else
+	    							{
+		    							var str = "<option  value=" + item.id + ">"
+	    								+ item.education_info + "</option>";
+	    							}
+		    						$(str).appendTo("#modalSelectEducationBackgroundList");
+								});
+					}
+				});
+			}
+		
+		
+</script>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap-responsive.css" />
+<link rel="stylesheet" type="text/css" href="../../static/Css/style.css" />
+<script type="text/javascript" src="../../static/Js/jquery.js"></script>
+<script type="text/javascript" src="../../static/Js/bootstrap.js"></script>
+<script type="text/javascript" src="../../static/Js/ckform.js"></script>
+<script type="text/javascript" src="../../static/Js/common.js"></script>
+<style type="text/css">
+
+<link rel="stylesheet" type="text/css" href="../../DataTables/media/css/jquery.dataTables.css">
+ 
+<script type="text/javascript" charset="utf8" src="../../DataTables/media/js/jquery.js"></script>
+ 
+<script type="text/javascript" charset="utf8" src="../../DataTables/media/js/jquery.dataTables.js"></script>
+body {
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+</style>
+</head>
+<body>
+	<table class="table table-condensed table-bordered table-hover">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>角色组</th>
+				<th>员工号</th>
+				<th>姓名</th>
+				<th>部门</th>
+				<th>分部、中心站</th>
+				<th>班组</th>
+				<th>操作</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{volist name = "searchByRole" id="vo"}
+			<tr>
+				<td>{$i}</td>
+				<td class="recordTime">{$vo.title}</td>
+				<td>{$vo.staff_info_employee_id}</td>
+				<td>{$vo.staff_info_name}</td>
+				<td>{$vo.department_info}</td>
+				<td>{$vo.subsection_info}</td>
+				<td>{$vo.team_info}</td>
+				<td>
+					<button type="button" id='buttonEdit[]' class="btn btn-info btn-lg">
+						<span class=" icon-edit"> </span> 编辑
+					</button>
+				</td>
+				<td>
+					<button type="button" id="buttonDelete" class="btn btn-info btn-lg">
+						<span class=" icon-edit"> </span> 删除
+					</button>
+				</td>
+			</tr>
+			{/volist}
+		</tbody>
+	</table>
+</body>
+</html>
+<script>
+	//绑定"新增"按键
+	$(':button[name="buttonEdit[]"]').bind('click', function() {
+		var returns = $(this).parents("tr").find(".recordTime").text();
+		alert(returns);
+	});
+</script>

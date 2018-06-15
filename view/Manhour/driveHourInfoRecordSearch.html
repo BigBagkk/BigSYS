@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="../../static/Css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../static/Css/bootstrap-responsive.css" />
+		<link rel="stylesheet" type="text/css" href="../../static/Css/style.css" />
+		<script type="text/javascript" src="../../static/Js/jquery.js"></script>
+		<script type="text/javascript" src="../../static/Js/bootstrap.js"></script>
+		<script type="text/javascript" src="../../static/Js/ckform.js"></script>
+		<script type="text/javascript" src="../../static/Js/common.js"></script>
+		<style type="text/css">
+			body {
+				padding-bottom: 40px;
+			}
+			.sidebar-nav {
+				padding: 9px 0;
+			}
+			@media (max-width: 980px) {
+				/* Enable use of floated navbar text */
+				.navbar-text.pull-right {
+					float: none;
+					padding-left: 5px;
+					padding-right: 5px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<table  class="table table-condensed table-bordered table-hover"  style="margin:5px" >
+			<thead >
+				<tr>
+					<th nowrap="nowrap">序号</th>
+					<th nowrap="nowrap">员工编号</th>
+					<th nowrap="nowrap">姓名</th>
+					<th nowrap="nowrap">中心</th>
+					<th nowrap="nowrap">岗位名称</th>
+					<th nowrap="nowrap">所属线路</th>
+					<th nowrap="nowrap">1月</th>
+					<th nowrap="nowrap">2月</th>
+					<th nowrap="nowrap">3月</th>
+					<th nowrap="nowrap">4月</th>
+					<th nowrap="nowrap">5月</th>
+					<th nowrap="nowrap">6月</th>
+					<th nowrap="nowrap">7月</th>
+					<th nowrap="nowrap">8月</th>
+					<th nowrap="nowrap">9月</th>
+					<th nowrap="nowrap">10月</th>
+					<th nowrap="nowrap">11月</th>
+					<th nowrap="nowrap">12月</th>
+					<th nowrap="nowrap">统计时间</th>
+					<th nowrap="nowrap">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{volist name = "selectDriveHourInfo" id="vo"}
+					<tr>
+						<td>{$i}</td>
+						<!-- <td nowrap="nowrap">{$vo.id}</td> -->
+						<td>{$vo.drive_hour_info_employee_id}</td>
+						<td>{$vo.drive_hour_info_employee_name}</td>
+						<td>{$vo.drive_hour_info_center}</td>
+						<td>{$vo.drive_hour_info_post}</td>
+						<td>{$vo.drive_hour_info_line}</td>
+						<td>{$vo.drive_hour_info_january}</td>
+						<td>{$vo.drive_hour_info_february}</td>
+						<td>{$vo.drive_hour_info_march}</td>
+						<td>{$vo.drive_hour_info_april}</td>
+						<td>{$vo.drive_hour_info_may}</td>
+						<td>{$vo.drive_hour_info_june}</td>
+						<td>{$vo.drive_hour_info_july}</td>
+						<td>{$vo.drive_hour_info_august}</td>
+						<td>{$vo.drive_hour_info_september}</td>
+						<td>{$vo.drive_hour_info_october}</td>
+						<td>{$vo.drive_hour_info_november}</td>
+						<td>{$vo.drive_hour_info_december}</td>
+						<td>{$vo.drive_hour_info_year}</td>
+						<td nowrap="nowrap" ><a href ="#"  class="btn btn-danger btn-lg" onclick="return delSingle({$vo.drive_hour_info_employee_id},{$vo.drive_hour_info_year});"><span class="icon-edit"></span>删除</a></td>
+					</tr>
+				{/volist}
+			</tbody>
+		</table>
+	</body>
+</html>
+<script>
+function reflashMain()
+{
+			var data = {
+					year:$('#selectYearList').val(),
+					line:$('#selectLineList').val(),
+					userName : $('#userName').val(),
+					userID : $('#userID').val()
+			};
+			$.ajax({
+				type : 'post',
+				data : data,
+				url : '/index/Manhour/driveHourInfoRecordSearch',
+				cache : false,
+				success : function(msg) {
+						$('#content').empty();
+						$('#content').html(msg);
+				}
+			});
+}
+
+function delSingle(userID,year)
+{
+	var data = {
+			userID : userID,
+			year : year
+		};
+	$.ajax({
+		type : 'post',
+		data : data,
+		url : '/index/manhour/driveHourInfoRecordDelete',
+		cache : false,
+		success : function(msg) {
+			if(msg)
+			{
+				reflashMain();
+			}
+			else{
+				alert("删除失败！！");
+			}
+		}
+	});
+}
+
+
+</script>

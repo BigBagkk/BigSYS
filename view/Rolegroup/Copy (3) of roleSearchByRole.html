@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap-responsive.css" />
+<link rel="stylesheet" type="text/css" href="../../static/Css/style.css" />
+
+<link rel="stylesheet" type="text/css"
+	href="../../DataTables/media/css/jquery.dataTables.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../DataTables/media/css/dataTables.bootstrap.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../DataTables/Buttons-1.4.2/css/buttons.dataTables.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../DataTables/Editor/css/editor.dataTables.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../DataTables/media/css/select.dataTables.min.css" />
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/media/js/jquery.js"></script>
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/media/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/media/js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/Buttons-1.4.2/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/Buttons-1.4.2/js/buttons.flash.min.js"></script>
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/Editor/js/dataTables.editor.min.js"></script>
+
+
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/media/js/dataTables.select.min.js"></script>
+
+<!--<script type="text/javascript" src="../../static/Js/jquery.js"></script>  -->
+<script type="text/javascript" src="../../static/Js/bootstrap.js"></script>
+<script type="text/javascript" src="../../static/Js/ckform.js"></script>
+<script type="text/javascript" src="../../static/Js/common.js"></script>
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<table id="tableRoleList" class="display" cellspacing="0" width="100%">
+			<thead>
+				<tr>
+					<th>角色组</th>
+					<th>员工号</th>
+					<th>姓名</th>
+					<th>部门</th>
+					<th>分部、中心站</th>
+					<th>班组</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<th>角色组</th>
+					<th>员工号</th>
+					<th>姓名</th>
+					<th>部门</th>
+					<th>分部、中心站</th>
+					<th>班组</th>
+				</tr>
+			</tfoot>
+			<tbody align="center">
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>
+<script>
+	var editor; 
+	$(document).ready(function(){
+		
+		 editor = new $.fn.dataTable.Editor( {
+		        ajax: "/index/BootstrapController/HandleEditTableData",
+		        table: "#tableRoleList",
+		        fields: [ {
+		                label: "姓名:",
+		                name: "name"
+		            }, {
+		                label: "Last name:",
+		                name: "last_name"
+		            }, {
+		                label: "Position:",
+		                name: "upload"
+		            }, {
+		                label: "Office:",
+		                name: "office"
+		            }, {
+		                label: "Extension:",
+		                name: "extn"
+		            }, {
+		                label: "Start date:",
+		                name: "start_date",
+		                type: "datetime"
+		            }, {
+		                label: "Salary:",
+		                name: "salary"
+		            }
+		        ]
+		    } );
+	    //使用表格控件DataTables配置项
+	    var data = {$searchByRole};
+	      
+	    var table =  $('#tableRoleList').DataTable({
+	    	data: data,
+	    	columns: [
+					  { data: 'title' },
+	                  { data: 'staff_info_employee_id' },
+	                  { data: 'staff_info_name' },
+	                  { data: 'department_info' },
+	                  { data: 'subsection_info' },
+	                  { data: 'team_info' }
+	              ],
+            iDisplayLength : 40, //默认显示的记录数 
+	    	bProcessing: true, //DataTables载入数据时，是否显示‘进度’提示  
+	    	bPaginate: true, //翻页功能
+	    	bLengthChange: true, //改变每页显示数据数量
+	    	bFilter: true, //过滤功能
+	    	bSort: true, //排序功能
+	    	bInfo: true,//页脚信息
+	    	bAutoWidth: true,//自动宽度
+	    	sPaginationType: "full_numbers",//显示数字的翻页样式
+	    		oLanguage: {
+	    			sLengthMenu: "每页显示 _MENU_ 条记录",
+	    			sZeroRecords: "抱歉， 没有找到",
+	    			sInfo: "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+	    			//sInfoEmpty: "没有数据",
+	    			sInfoFiltered: "(从 _MAX_ 条数据中检索)",
+	    			oPaginate: {
+	    			sFirst: "首页",
+	    			sPrevious: "前一页",
+	    			sNext: "后一页",
+	    			sLast: "尾页"
+	    			},
+	    			sZeroRecords: "没有检索到数据",
+	    			sProcessing : "正在获取数据，请稍后..."
+	    	},
+	    	select: true,
+     		dom: 'Bfrtip',//导出按钮设置
+     		buttons: [
+     		        	{ extend: 'create', editor: editor },
+     		        	{ extend: 'edit',   editor: editor },
+     		        	{ extend: 'remove', editor: editor },
+     	 		        {
+       		              extend: 'excel',
+       		              text: '导出'
+       		           }
+     		      ]
+	    });
+	});
+   
+	    function getRoleList(rowTitle) {
+	    	$.ajax({
+	    		type : 'post',
+	    		url : '/index/Role/getRoleList',
+	    		cache : false,
+	    		success : function(msg) {
+	    			$('#serachPageSelectRoleList').empty();
+	    			var str = "<option  value=" + '0' + ">" + "——请选择角色——"
+	    					+ "</option>";
+	    			$(str).appendTo("#serachPageSelectRoleList");
+	    			$(msg).each(
+	    					function(i, item) {
+	    						if(item.title ==rowTitle )
+	    							{
+		    							var str = "<option  value=" + item.id + " selected=\"selected\" >"
+	    								+ item.title + "</option>";
+	    							}
+	    						else
+	    							{
+		    							var str = "<option  value=" + item.id + ">"
+	    								+ item.title + "</option>";
+	    							}
+	    						$(str).appendTo("#serachPageSelectRoleList");
+	    					});
+	    		}
+	    	});
+	    };
+</script>

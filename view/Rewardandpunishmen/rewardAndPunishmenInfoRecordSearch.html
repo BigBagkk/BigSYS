@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="../../static/Css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../static/Css/bootstrap-responsive.css" />
+		<link rel="stylesheet" type="text/css" href="../../static/Css/style.css" />
+		<script type="text/javascript" src="../../static/Js/jquery.js"></script>
+		<script type="text/javascript" src="../../static/Js/bootstrap.js"></script>
+		<script type="text/javascript" src="../../static/Js/ckform.js"></script>
+		<script type="text/javascript" src="../../static/Js/common.js"></script>
+		<style type="text/css">
+			body {
+				padding-bottom: 40px;
+			}
+			.sidebar-nav {
+				padding: 9px 0;
+			}
+			@media (max-width: 980px) {
+				/* Enable use of floated navbar text */
+				.navbar-text.pull-right {
+					float: none;
+					padding-left: 5px;
+					padding-right: 5px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<table  class="table table-condensed table-bordered table-hover"  style="margin:5px" >
+			<thead >
+				<tr>
+					<th nowrap="nowrap">序号</th>
+					<th nowrap="nowrap">发文日期</th>
+					<th nowrap="nowrap">发文号</th>
+					<th nowrap="nowrap">奖惩性质</th>
+					<th nowrap="nowrap">奖惩种类</th>
+					<th nowrap="nowrap">员工编号</th>
+					<th nowrap="nowrap">姓名</th>
+					<th nowrap="nowrap">岗位</th>
+					<th nowrap="nowrap">所在单位</th>
+					<th nowrap="nowrap">政治面貌</th>
+					<th nowrap="nowrap">事件分类</th>
+					<th nowrap="nowrap">事件发生日期</th>
+					<th nowrap="nowrap">引用条款</th>
+					<th nowrap="nowrap">发生金额</th>
+					<th nowrap="nowrap">奖惩事实</th>
+					<th nowrap="nowrap">备注</th>
+					<th nowrap="nowrap">统计月份</th>
+					<th nowrap="nowrap">年度</th>
+					<th nowrap="nowrap">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{volist name = "selectRewardsPunishmentInfo" id="vo"}
+					<tr>
+						<!-- <td>{$i}</td> -->
+						<td nowrap="nowrap">{$vo.id}</td>
+						<td nowrap="nowrap">{$vo.rewards_punishment_info_record_date}</td>
+						<td>{$vo.rewards_punishment_info_record_ID}</td>
+						<td>{$vo.rewards_punishment_info_properties}</td>
+						<td>{$vo.rewards_punishment_info_kind}</td>
+						<td nowrap="nowrap">{$vo.rewards_punishment_info_employee_id}</td>
+						<td nowrap="nowrap">{$vo.rewards_punishment_info_employee_name}</td>
+						<td>{$vo.rewards_punishment_info_post}</td>
+						<td>{$vo.rewards_punishment_info_center}{$vo.rewards_punishment_info_department}{$vo.rewards_punishment_info_subsection}</td>
+						<td>{$vo.rewards_punishment_info_politics}</td>
+						<td>{$vo.rewards_punishment_info_evenet_kind}</td>
+						<td nowrap="nowrap">{$vo.rewards_punishment_info_evenet_date}</td>
+						<td>{$vo.rewards_punishment_info_evenet_rule}</td>
+						<td>{$vo.rewards_punishment_info_money}</td>
+						<td>{$vo.rewards_punishment_info_details}</td>
+						<td>{$vo.rewards_punishment_info_tips}</td>
+						<td nowrap="nowrap">{$vo.rewards_punishment_info_statistics_month}</td>
+						<td nowrap="nowrap">{$vo.rewards_punishment_info_statistics_year}</td>
+						<td nowrap="nowrap" ><a href ="#"  class="btn btn-danger btn-lg" onclick="return delSingle({$vo.id});"><span class="icon-edit"></span>删除</a></td>
+					</tr>
+				{/volist}
+			</tbody>
+		</table>
+	</body>
+</html>
+<script>
+function reflashMain()
+{
+	var data = {
+			recordID : $('#selectRecordIDList option:selected').text(),
+			properties : $('#selectPropertiesList option:selected').text(),
+			kind : $('#selectKindList option:selected').text(),
+			userName : $('#userName').val(),
+			userID : $('#userID').val(),
+			beginDate : $('#datepickerBeginDate').val(),
+			endDate : $('#datepickerEndDate').val()
+		};
+		$.ajax({
+			type : 'post',
+			data : data,
+			url : '/index/Rewardandpunishmen/rewardAndPunishmenInfoRecordSearch',
+			cache : false,
+			success : function(msg) {
+				if(msg =="noData")
+				{
+					alert("请选择发文时间！！");
+				}
+				else{
+					$('#content').empty();
+					$('#content').html(msg);
+				}
+
+			}
+		});	
+}
+
+function delSingle(id)
+{
+	var data = {
+			eventID : id
+		};
+	$.ajax({
+		type : 'post',
+		data : data,
+		url : '/index/Rewardandpunishmen/rewardAndPunishmenInfoRecordDelete',
+		cache : false,
+		success : function(msg) {
+			if(msg)
+			{
+				reflashMain();
+			}
+			else{
+				alert("删除失败！！");
+			}
+		}
+	});
+};
+
+
+</script>

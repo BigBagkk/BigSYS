@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="../../static/Css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../static/Css/bootstrap-responsive.css" />
+		<link rel="stylesheet" type="text/css" href="../../static/Css/style.css" />
+		<script type="text/javascript" src="../../static/Js/jquery.js"></script>
+		<script type="text/javascript" src="../../static/Js/bootstrap.js"></script>
+		<script type="text/javascript" src="../../static/Js/ckform.js"></script>
+		<script type="text/javascript" src="../../static/Js/common.js"></script>
+		<style type="text/css">
+			body {
+				padding-bottom: 40px;
+			}
+			.sidebar-nav {
+				padding: 9px 0;
+			}
+			@media (max-width: 980px) {
+				/* Enable use of floated navbar text */
+				.navbar-text.pull-right {
+					float: none;
+					padding-left: 5px;
+					padding-right: 5px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<table  class="table table-condensed table-bordered table-hover"  style="margin:5px" >
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>一级菜单</th>
+					<th >二级菜单</th>
+					<th >三级菜单</th>
+					<th >URL</th>
+				</tr>
+			</thead>
+			<tbody>
+				{volist name = "navs" id="vo"}
+					<tr>
+						<td>{$i}</td>
+						<td>{$vo.first}</td>
+						<td>{$vo.second}</td>
+						<td>{$vo.third}</td>
+						<td>{$vo.url}</td>
+					</tr>
+				{/volist}
+			</tbody>
+		</table>
+	</body>
+</html>
+<script></script>

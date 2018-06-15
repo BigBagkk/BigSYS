@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="../../static/Css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../static/Css/bootstrap-responsive.css" />
+		<link rel="stylesheet" type="text/css" href="../../static/Css/style.css" />
+		<script type="text/javascript" src="../../static/Js/jquery.js"></script>
+		<script type="text/javascript" src="../../static/Js/bootstrap.js"></script>
+		<script type="text/javascript" src="../../static/Js/ckform.js"></script>
+		<script type="text/javascript" src="../../static/Js/common.js"></script>
+		<style type="text/css">
+			body {
+				padding-bottom: 40px;
+			}
+			.sidebar-nav {
+				padding: 9px 0;
+			}
+			@media (max-width: 980px) {
+				/* Enable use of floated navbar text */
+				.navbar-text.pull-right {
+					float: none;
+					padding-left: 5px;
+					padding-right: 5px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<table  class="table table-condensed table-bordered table-hover"  style="margin:5px" >
+			<thead >
+				<tr>
+					<th nowrap="nowrap">序号</th>
+					<th nowrap="nowrap">通报内容</th>
+					<th nowrap="nowrap">发文号</th>
+					<th nowrap="nowrap">责任单位</th>
+					<th nowrap="nowrap">惩处类型</th>
+					<th nowrap="nowrap">考核分值</th>
+					<th nowrap="nowrap">发文日期</th>
+					<th nowrap="nowrap">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{volist name = "selectEvaluateCollectiveInfo" id="vo"}
+					<tr>
+						<!--  <td>{$i}</td>-->
+						<td>{$vo.id}</td>
+						<td>{$vo.evaluate_collective_info_details}</td>
+						<td>{$vo.evaluate_collective_info_record_ID}</td>
+						<td>{$vo.evaluate_collective_info_team}</td>
+						<td>{$vo.evaluate_collective_info_kind}</td>
+						<td>{$vo.evaluate_collective_info_value}</td>
+						<td>{$vo.evaluate_collective_info_record_date}</td>
+						<td nowrap="nowrap" ><a href ="#"  class="btn btn-danger btn-lg" onclick="return delSingle({$vo.id});"><span class="icon-edit"></span>删除</a></td>
+					</tr>
+				{/volist}
+			</tbody>
+		</table>
+	</body>
+</html>
+<script>
+function reflashMain()
+{
+	var data = {
+			beginDate : $('#datepickerBeginDate').val(),
+			endDate : $('#datepickerEndDate').val(),
+			dutyTeam : $('#selectDutyTeam').val(),
+			dutyType : $('#selectDutyType').val()
+		};
+		$.ajax({
+			type : 'post',
+			data : data,
+			url : '/index/Evaluate/collectiveInfoRecordSearch',
+			cache : false,
+			success : function(msg) {
+					$('#content').empty();
+					$('#content').html(msg);
+			}
+		});
+}
+
+function delSingle(id)
+{
+	var data = {
+			id : id,
+		};
+	$.ajax({
+		type : 'post',
+		data : data,
+		url : '/index/Evaluate/collectiveInfoRecordDelete',
+		cache : false,
+		success : function(msg) {
+			if(msg)
+			{
+				reflashMain();
+			}
+			else{
+				alert("删除失败！！");
+			}
+		}
+	});
+};
+</script>

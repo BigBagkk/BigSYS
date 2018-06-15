@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap-responsive.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap-datepicker.css" />
+<link rel="stylesheet" type="text/css" href="../../static/Css/style.css" />
+<script type="text/javascript" src="../../static/Js/jquery.js"></script>
+<script type="text/javascript" src="../../static/Js/bootstrap.js"></script>
+<script type="text/javascript" src="../../static/Js/ckform.js"></script>
+<script type="text/javascript" src="../../static/Js/common.js"></script>
+<!-- 使用 ajaxSubmit方法 必须引用-->
+<script type="text/javascript" src="../../static/Js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="../../static/Js/bootstrap-datepicker.zh-CN.min.js"></script>
+<script type="text/javascript" src="../../static/Js/jquery.form.min.js"></script>
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+</style>
+</head>
+<body>
+	<div>
+		<table  class="table table-bordered table-hover definewidth m10">
+			<tr>
+				<td>工时信息管理</td>
+			</tr>
+			<tr >
+				<td style=" text-align:center"><h5>日期</h5></td>
+				<td style=" text-align:center"><h5>分部、中心站</h5></td>
+				<td style=" text-align:center"><h5>工班、自然站</h5></td>
+				<td style=" text-align:center"><h5>员工编号</h5></td>
+				<td style=" text-align:center"><h5>员工姓名</h5></td>
+				<td style=" text-align:center"><h5>查询</h5></td>
+				<td style=" text-align:center"><h5>导出操作</h5></td>
+				<td style=" text-align:center"><h5>导入操作</h5></td>
+			</tr>
+			<tr>
+				<td style=" text-align:center">
+					<select style="width: 80px;" id="selectYearList"></select>年
+					<select style="width: 40px;" id="selectMonthList"></select>月
+				</td>
+				<td style=" text-align:center">
+					<select style="width: 200px;" id="selectDepartmentList"></select>
+				</td>
+				<td style=" text-align:center">
+					<select style="width: 200px;" id="selectTeamList"></select>
+				</td>
+				<td style=" text-align:center"><input style="width: 80px;" type="text" id="userID" /></td>
+				<td style=" text-align:center"><input style="width: 80px;" type="text" id="userName" /></td>
+				<td style=" text-align:center">
+					<button type="button" id="buttonSearch"
+						class="btn btn-primary btn-lg" style="width: 80px;">
+						<span class="icon-search"> </span> 查询
+					</button>
+				</td>
+				<td style=" text-align:center">
+					<button type="button" id="buttonExport"
+						class="btn btn-primary btn-lg" style="width: 80px;">
+						<span class="icon-search"> </span> 导出
+					</button>
+				</td>
+				<td style=" text-align:center" >
+				<!-- <form enctype="multipart/form-data" action="/index/Staff/importStaffInfo"  method="post" > -->
+				<form enctype="multipart/form-data" id = "formUpload" >
+					<table>
+						<tr>
+							<td><input type="file" name="myfile" id="myfile" ></td>
+							<td><input type="button" id = "buttonUpload" value="上传文件" /></td>
+							<!--  <td><input id = "upload" type="submit" value="上传文件" /></td>-->
+						</tr>
+					</table>
+				</form>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div id="content" style="margin: 10px" border:1px></div>
+</body>
+</html>
+<script type="text/javascript">
+	$().ready(function() {
+		getDepartmentList();
+		getTeamList();
+		getYearList();
+		getMonthList();
+		//绑定查询按钮
+		$('#buttonSearch').bind('click', function() {
+			var data = {
+				year:$('#selectYearList').val(),
+				month:$('#selectMonthList').val(),
+				department:$('#selectDepartmentList').val(),
+				team:$('#selectTeamList').val(),
+				userName : $('#userName').val(),
+				userID : $('#userID').val()
+			};
+			$.ajax({
+				type : 'post',
+				data : data,
+				url : '/index/Manhour/workHourInfoRecordSearch',
+				cache : false,
+				success : function(msg) {
+					$('#content').empty();
+					$('#content').html(msg);
+				}
+			});
+		}) ;
+		//绑定导出按钮
+		$('#buttonExport').bind('click', function() {
+            //打开新连接，相当于超链接效果。导出excel表
+			//excel导出，前台通过跳转方式请求，不能通过ajax方式请求，否则无效。
+			window.location.href ="/index/Manhour/exportWorkHourInfo?year="+
+								  $('#selectYearList').val()+"&month="+$('#selectMonthList').val()+
+					              "&department="+$('#selectDepartmentList').val()+
+					              "&team="+$('#selectTeamList').val()+
+					              "&userName="+$('#userName').val()+
+					              "&userID="+$('#userID').val();
+		});
+		//绑定上传按钮
+		$('#buttonUpload').bind('click', function() {
+			//获取上传文件文件名称。
+			var file = $('#myfile').val();
+			var pos=file.lastIndexOf("\\");//获取最后一个\的位置
+			var filename =  file.substring(pos+1);//截取最后一个\后面的文字
+			
+            $("#formUpload").ajaxSubmit({
+            	url: '/index/Manhour/importWorkHourInfo', /*设置post提交到的页面*/
+                data: {
+                    'filename': filename
+                },
+                beforeSend : function(XMLHttpRequest) {
+                    $('#content').empty();
+                    $("#content").html("<div style='background-image:url(../../static/Images/loading.gif);background-position:left; background-repeat:no-repeat; font-size:14px; padding-left:20px; text-align:left;height:20px;line-height:20px;'>正在上传，请稍后。。。</div>");
+                },
+                success: function (data) {
+                	if(data == "noUpload")
+                		{
+                			var str ="<h1 align='center'><font  face='verdana'>未选择上传文件！！</font></h1>";
+            				$('#content').empty();
+        					$('#content').html(str);
+                		}
+                	else if(data == "overMaxSize")
+                		{
+                			var str ="<h1 align='center'><font  face='verdana'>上传文件超过5M！！</font></h1>";
+            				$('#content').empty();
+        					$('#content').html(str);
+                		}
+                	else
+                		{
+	        				$('#content').empty();
+	    					$('#content').html(data);
+                		}
+                },
+                error: function (error) {
+                	//$('#content').empty();
+					//$('#content').html(error); 
+				},
+                type: "post", /*设置表单以post方法提交*/
+                dataType: "json" /*设置返回值类型为文本*/
+            });
+            //alert("22");
+		});
+	});//初始化末尾
+	function getDepartmentList() {
+		$.ajax({
+			type : 'post',
+			url : '/index/Manhour/getWorkhourDepartmentList',
+			cache : false,
+			success : function(msg) {
+				$('#selectDepartmentList').empty();
+				var str = "<option  value=' '> </option>";
+				$(str).appendTo("#selectDepartmentList");
+				$(msg).each(
+						function(i, item) {
+							var str = "<option  value=" + item.work_hour_info_department + ">"
+									+ item.work_hour_info_department + "</option>";
+							$(str).appendTo("#selectDepartmentList");
+						});
+			}
+		});
+	}
+	function getTeamList() {
+		$.ajax({
+			type : 'post',
+			url : '/index/Manhour/getWorkhourTeamList',
+			cache : false,
+			success : function(msg) {
+				$('#selectTeamList').empty();
+				var str = "<option  value=' '> </option>";
+				$(str).appendTo("#selectTeamList");
+				$(msg).each(
+						function(i, item) {
+							var str = "<option  value=" + item.work_hour_info_team + ">"
+									+ item.work_hour_info_team + "</option>";
+							$(str).appendTo("#selectTeamList");
+						});
+			}
+		});
+	}
+	function getYearList() {
+		var date=new Date;
+		var year=date.getFullYear(); 
+		var year2=date.getFullYear()-1; 
+		var year3=date.getFullYear()-2; 
+		var str = "<option  value=" + year + ">"+ year +"</option>";
+		var str1 = "<option  value=" + year2 + ">"+ year2 +"</option>";
+		var str2 = "<option  value=" + year3 + ">"+ year3 +"</option>";
+		$(str).appendTo("#selectYearList");
+		$(str1).appendTo("#selectYearList");
+		$(str2).appendTo("#selectYearList");
+	}
+	function getMonthList() {
+		var str = 
+		"<option   value='0'>"+ " " +"</option>"
+		+"<option   value='1'>"+ "1" +"</option>"
+		+"<option  value='2'>"+ "2" +"</option>"
+		+"<option  value='3'>"+ "3" +"</option>"
+		+"<option  value='4'>"+ "4" +"</option>"
+		+"<option  value='5'>"+ "5" +"</option>"
+		+"<option  value='6'>"+ "6" +"</option>"
+		+"<option  value='7'>"+ "7" +"</option>"
+		+"<option  value='8'>"+ "8" +"</option>"
+		+"<option  value='9'>"+ "9" +"</option>"
+		+"<option  value='10'>"+ "10" +"</option>"
+		+"<option  value='11'>"+ "11" +"</option>"
+		+"<option  value='12'>"+ "12" +"</option>";
+		$(str).appendTo("#selectMonthList");
+	}
+</script>

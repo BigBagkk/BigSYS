@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap-responsive.css" />
+<link rel="stylesheet" type="text/css" href="../../static/Css/style.css" />
+<script type="text/javascript" src="../../static/Js/jquery.js"></script>
+<script type="text/javascript" src="../../static/Js/bootstrap.js"></script>
+<script type="text/javascript" src="../../static/Js/ckform.js"></script>
+<script type="text/javascript" src="../../static/Js/common.js"></script>
+
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+</style>
+</head>
+<body>
+	<div>
+		<table class="table table-bordered table-hover definewidth m10">
+			<tr>
+				<td colspan="6">菜单管理</td>
+			</tr>
+			<tr>
+				<td>一级菜单</td>
+				<td><select id="firstNavs">
+						<option value="0">——请选择菜单——</option>
+				</select>
+					<button type="button" id="buttonMenuSertch"
+						class="btn btn-primary btn-lg">
+						<span class="icon-search"></span> 查询
+					</button></td>
+				<td>
+					<button type="button" id="firstNavsManagement"
+						class="btn btn-primary btn-lg">
+						<span class="icon-th-list"></span> 一级菜单管理
+					</button>
+				</td>
+				<td>
+					<button type="button" id="secondNavsManagement"
+						class="btn btn-primary btn-lg">
+						<span class="icon-plus"></span> 二级菜单管理
+					</button>
+				</td>
+				<td>
+					<button type="button" id="thirdNavsManagement"
+						class="btn btn-primary btn-lg">
+						<span class="icon-plus"></span> 三级菜单管理
+					</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div id="content" style="margin:10px"></div>
+
+</body>
+</html>
+<script type="text/javascript">
+	$().ready(function() {
+		//下拉菜单添加一级菜单
+		getFirstNavs();
+		//绑定"一级菜单管理"按键
+		$('#firstNavsManagement').bind('click', function() {
+			$.ajax({
+				type : 'post',
+				url : '/index/Menu/firstNavsManagement ',
+				cache : false,
+				success : function(msg) {
+					$('#content').empty();
+					$('#content').html(msg);
+				}
+			});
+		});
+		//绑定"二级菜单管理"按键
+		$('#secondNavsManagement').bind('click', function() {
+			$.ajax({
+				type : 'post',
+				url : '/index/Menu/secondNavsManagement',
+				cache : false,
+				success : function(msg) {
+					$('#content').empty();
+					$('#content').html(msg);
+				}
+			});
+		});
+		//绑定"三级菜单管理"按键
+		$('#thirdNavsManagement').bind('click', function() {
+			$.ajax({
+				type : 'post',
+				url : '/index/Menu/thirdNavsManagement',
+				cache : false,
+				success : function(msg) {
+					$('#content').empty();
+					$('#content').html(msg);
+				}
+			});
+		});
+		//绑定"查询"按键
+		$('#buttonMenuSertch').bind('click', function() {
+            var data = {
+            		firstNav : $('#firstNavs').val(),
+                };
+			$.ajax({
+				type : 'post',
+				data : data,
+				url : '/index/Menu/navsSearch',
+				cache : false,
+				success : function(msg) {
+					$('#content').empty();
+					$('#content').html(msg);
+				}
+			});
+		});
+		//绑定二级菜单按键
+		$('#buttonMenuSecond').bind('click', function() {
+			$.ajax({
+				type : 'post',
+				url : '/index/Menu/getSencondNavs',
+				cache : false,
+				success : function(msg) {
+					$('#content').empty();
+					$('#content').html(msg);
+				}
+			});
+		});
+	});
+	//下拉菜单添加一级菜单
+	function getFirstNavs() {
+		$.ajax({
+			type : 'post',
+			url : '/index/Menu/getFirstNavs',
+			cache : false,
+			success : function(msg) {
+				$(msg).each(
+						function(i, item) {
+							var str = "<option  value=" + item + ">" + item
+									+ "</option>";
+							$(str).appendTo("#firstNavs");
+						});
+			}
+		});
+	}
+</script>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="../../static/Css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../static/Css/bootstrap-responsive.css" />
+		<link rel="stylesheet" type="text/css" href="../../static/Css/style.css" />
+		<script type="text/javascript" src="../../static/Js/jquery.js"></script>
+		<script type="text/javascript" src="../../static/Js/bootstrap.js"></script>
+		<script type="text/javascript" src="../../static/Js/ckform.js"></script>
+		<script type="text/javascript" src="../../static/Js/common.js"></script>
+		<style type="text/css">
+			body {
+				padding-bottom: 40px;
+			}
+			.sidebar-nav {
+				padding: 9px 0;
+			}
+			@media (max-width: 980px) {
+				/* Enable use of floated navbar text */
+				.navbar-text.pull-right {
+					float: none;
+					padding-left: 5px;
+					padding-right: 5px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<table  class="table table-condensed table-bordered table-hover"  style="margin:5px" >
+			<thead >
+				<tr>
+					<th nowrap="nowrap">序号</th>
+					<th nowrap="nowrap">检查日期</th>
+					<th nowrap="nowrap">层级</th>
+					<th nowrap="nowrap">责任室/分部/中心站</th>
+					<th nowrap="nowrap">单位</th>
+					<th nowrap="nowrap">类别</th>
+					<th nowrap="nowrap">检查事项</th>
+					<th nowrap="nowrap">整改措施及其它意见</th>
+					<th nowrap="nowrap">整改期限</th>
+					<th nowrap="nowrap">责任人</th>
+					<th nowrap="nowrap">整改情况</th>
+					<th nowrap="nowrap">复核人</th>
+					<th nowrap="nowrap">整改完成情况</th>
+					<th nowrap="nowrap">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{volist name = "selectOutsourcecheckRecordSearch" id="vo"}
+					<tr>
+						<td>{$i}</td>
+						<!-- <td nowrap="nowrap">{$vo.id}</td> -->
+						<td>{$vo.outsource_check_info_date}</td>
+						<td>{$vo.outsource_check_info_level}</td>
+						<td>{$vo.outsource_check_info_department}</td>
+						<td>{$vo.outsource_check_info_team}</td>
+						<td>{$vo.outsource_check_info_kind}</td>
+						<td>{$vo.outsource_check_info_item}</td>
+						<td>{$vo.outsource_check_info_opinin}</td>
+						<td>{$vo.outsource_check_info_deadline}</td>
+						<td>{$vo.outsource_check_info_principal}</td>
+						<td>{$vo.outsource_check_info_measure}</td>
+						<td>{$vo.outsource_check_info_rechecker}</td>
+						<td>{$vo.outsource_check_info_complete}</td>
+						<td nowrap="nowrap" ><a href ="#"  class="btn btn-danger btn-lg" onclick="return delSingle({$vo.id});"><span class="icon-edit"></span>删除</a></td>
+					</tr>
+				{/volist}
+			</tbody>
+		</table>
+	</body>
+</html>
+<script>
+function reflashMain()
+{
+			var data = {
+					selectCheckLevel : $('#selectCheckLevel').val(),
+					selectCheckTeam : $('#selectCheckTeam').val(),
+					selectCheckKind : $('#selectCheckKind').val(),
+					beginDate : $('#datepickerBeginDate').val(),
+					endDate : $('#datepickerEndDate').val()
+				};
+			$.ajax({
+				type : 'post',
+				data : data,
+				url : '/index/Normalcheck/outsourceCheckRecordSearch',
+				cache : false,
+				success : function(msg) {
+					if(msg =="noData")
+					{
+						alert("请选择检查时间！！");
+						return;
+					}
+					if(msg =="noLevel")
+					{
+						alert("请选择检查层级！！");
+						return;
+					}
+					else{
+						$('#content').empty();
+						$('#content').html(msg);
+					}
+				}
+			});
+}
+function delSingle(ID)
+{
+	var data = {
+			ID : ID
+		};
+	$.ajax({
+		type : 'post',
+		data : data,
+		url : '/index/Normalcheck/outsourcecheckInfoRecordDelete',
+		cache : false,
+		success : function(msg) {
+			if(msg)
+			{
+				reflashMain();
+			}
+			else{
+				alert("删除失败！！");
+			}
+		}
+	});
+}
+
+
+</script>

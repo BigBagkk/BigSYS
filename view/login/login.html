@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>	
+<head>
+<title>车站服务一部信息管理系统登陆</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta  http-equiv="content-type" content="text/html;charset=utf-8" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<meta name="keywords" content="Flat Dark Web Login Form Responsive Templates, Iphone Widget Template, Smartphone login forms,Login form, Widget Template, Responsive Templates, a Ipad 404 Templates, Flat Responsive Templates" />
+<link href="/static/Css/loginStyle.css" rel='stylesheet' type='text/css' />
+<!--webfonts
+<link href='http://fonts.useso.com/css?family=PT+Sans:400,700,400italic,700italic|Oswald:400,300,700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.useso.com/css?family=Exo+2' rel='stylesheet' type='text/css'>
+//webfonts-->
+<script  type="text/javascript" charset="utf-8" src="/static/Js/jquery.js"></script>
+<script  type="text/javascript" charset="utf-8" src="/static/Js/jquery.md5.js"></script>
+</head>
+<body>
+<script>
+$(document).ready(function(c) {
+	$('.close').on('click', function(c){
+		$('.login-form').fadeOut('slow', function(c){
+	  		$('.login-form').remove();
+		});
+	});	
+   $('#btn').bind('click', function(event) {
+          CheckLogin();
+        });
+    /*
+     * *捕捉回车按键，验证登陆信息。
+     */
+	$(document).keypress(function(e) { 
+		// 回车键事件 
+		   if(e.keyCode  == '13') { 
+				CheckLogin();
+			}
+	}); 
+    $("#userName")[0].focus();
+});
+   function CheckLogin() {
+            if ($("#userName").val() == '') {
+                alert("请输入你的帐号(工号)!");
+                $("#userName")[0].focus();
+                return false;
+            }
+            if ($("#passWord").val() == '') {
+                alert("请输入密码!");
+                $("#passWord")[0].focus();
+                return false;
+            }
+            //var loginurl = "/index/Login/logincheck";
+            //var url = loginurl + "?userName=" + $("#userName").val() + "&passWord=" + $.md5($("#passWord").val());
+            //location.href = url;
+            AjaxRequest($("#userName").val(), $("#passWord").val());
+        }
+   function AjaxRequest(userName, passWord) {
+      var loginurl = "/index/Login/logincheck";
+       $.ajax({
+           type : 'get',
+           url : loginurl + "?userName=" + userName + "&passWord=" + $.md5(passWord),
+           cache : false,
+           beforeSend : function(XMLHttpRequest) {
+        	   $('#btn').val("正在登陆，请稍后。。。");       	   
+           },
+           cache : false,
+           success : function(msg) {
+        	   if (msg == 'yes') {
+                   $("#userName").attr("disabled", "disabled");
+                   $("#passWord").attr("disabled", "disabled");
+                   $("#btn").attr("disabled", "disabled");
+                   $('#btn').val("登陆成功!"); 
+                   location.href = 'index/index/index';
+                   //alert("111");
+               }
+               else if(msg == 'statusOFF')
+        	   {
+        	   	$('#btn').val("人员被禁用！！");  
+        	   }
+        	   else if (msg == 'no') {
+                   //alert("用户名/密码不正确!");
+                   $('#btn').val("用户名/密码不正确!");   
+                   $("#userName")[0].focus();
+                   $("#userName")[0].select();
+               }
+               else if(msg == 'DBError')
+            	   {
+            	   	$('#btn').val("数据库异常，请联系管理员！");  
+            	   }
+           }
+       });
+   }
+</script>
+ <!--SIGN UP-->
+ <h1>车站服务一部信息管理系统</h1>
+<div class="login-form">
+	<div class="close"> </div>
+		<div class="head-info">
+			<label class="lbl-1"> </label>
+			<label class="lbl-2"> </label>
+			<label class="lbl-3"> </label>
+		</div>
+			<div class="clear"> 
+		</div>
+	<div class="avtar">
+		<img src="/static/images/avtar.png" />
+	</div>
+			<!-- <form action="/index/Login/logincheck" method="post">
+					<input type="text" class="text" name="userName" value="Username" maxlength="6" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Username';}" >
+			  	<div class="key">
+					<input type="password" value="Password" maxlength="6" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}">
+			 	</div>
+				<div class="signin">
+					<input type="submit" value="登陆" >
+				</div>
+			</form>
+		-->
+				<input type="text" class="text" id = "userName" name="userName"  maxlength="6"  >
+			<div class="key">
+				<input type="password" id="passWord"  name="passWord"  maxlength="6"  >
+			</div>
+			<div class="signin">
+				<input type="button" id= "btn" value="登陆" >
+			</div>
+
+</div>
+ <div class="copy-rights">
+	<p>Copyright &copy; 2017.车站服务一部 All rights reserved.</p>
+</div>
+</body>
+</html>

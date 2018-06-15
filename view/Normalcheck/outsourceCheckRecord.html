@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap-responsive.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap-datepicker.css" />
+<link rel="stylesheet" type="text/css" href="../../static/Css/style.css" />
+<script type="text/javascript" src="../../static/Js/jquery.js"></script>
+<script type="text/javascript" src="../../static/Js/bootstrap.js"></script>
+<script type="text/javascript" src="../../static/Js/ckform.js"></script>
+<script type="text/javascript" src="../../static/Js/common.js"></script>
+<!-- 使用 ajaxSubmit方法 必须引用-->
+<script type="text/javascript" src="../../static/Js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="../../static/Js/bootstrap-datepicker.zh-CN.min.js"></script>
+<script type="text/javascript" src="../../static/Js/jquery.form.min.js"></script>
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+</style>
+</head>
+<body>
+	<div>
+		<table  class="table table-bordered table-hover definewidth m10">
+			<tr>
+				<td>委外检查通报管理</td>
+			</tr>
+			<tr >
+				<td style=" text-align:center"><h5>检查日期</h5></td>
+				<td style=" text-align:center"><h5>检查层级</h5></td>
+				<td style=" text-align:center"><h5>单位</h5></td>
+				<td style=" text-align:center"><h5>类别</h5></td>
+				<td style=" text-align:center"><h5>查询</h5></td>
+				<td style=" text-align:center"><h5>导出操作</h5></td>
+				<td style=" text-align:center"><h5>导入操作</h5></td>
+			</tr>
+			<tr>
+				<td style=" text-align:center">
+					从:<input type="text" name ="datepickerBeginDate" id ="datepickerBeginDate" class="datepicker" placeholder="请选择日期" />
+					至:<input type="text" name ="datepickerEndDate" id ="datepickerEndDate" class="datepicker" placeholder="请选择日期" />
+				</td>
+				<td><select style="width: 80px;" id="selectCheckLevel">
+					<option value="0">————</option>
+				</select></td>
+				<td><select style="width: 80px;" id="selectCheckTeam">
+					<option value="0">————</option>
+				</select></td>
+				<td><select style="width: 80px;" id="selectCheckKind">
+					<option value="0">————</option>
+				</select></td>
+				<td style=" text-align:center">
+					<button type="button" id="buttonSearch"
+						class="btn btn-primary btn-lg" style="width: 80px;">
+						<span class="icon-search"> </span> 查询
+					</button>
+				</td>
+				<td style=" text-align:center">
+					<button type="button" id="buttonExport"
+						class="btn btn-primary btn-lg" style="width: 80px;">
+						<span class="icon-search"> </span> 导出
+					</button>
+				</td>
+				<td style=" text-align:center" >
+				<!-- <form enctype="multipart/form-data" action="/index/Staff/importStaffInfo"  method="post" > -->
+				<form enctype="multipart/form-data" id = "formUpload" >
+					<table>
+						<tr>
+							<td><input type="file" name="myfile" id="myfile"  ></td>
+							<td><input type="button" id = "buttonUpload" value="上传文件" /></td>
+							<!--  <td><input id = "upload" type="submit" value="上传文件" /></td>-->
+						</tr>
+					</table>
+				</form>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div id="content" style="margin: 10px" border:1px></div>
+</body>
+</html>
+<script type="text/javascript">
+	$().ready(function() {
+		datapickerInit();
+		getOutsourceCheckLevelList();
+		getOutsourceCheckTeamList();
+		getOutsourceCheckkindList();
+
+		//绑定查询按钮
+		$('#buttonSearch').bind('click', function() {
+			var data = {
+				selectCheckLevel : $('#selectCheckLevel').val(),
+				selectCheckTeam : $('#selectCheckTeam').val(),
+				selectCheckKind : $('#selectCheckKind').val(),
+				beginDate : $('#datepickerBeginDate').val(),
+				endDate : $('#datepickerEndDate').val()
+			};
+			$.ajax({
+				type : 'post',
+				data : data,
+				url : '/index/Normalcheck/outsourceCheckRecordSearch',
+				cache : false,
+				success : function(msg) {
+					if(msg =="noData")
+					{
+						alert("请选择检查时间！！");
+						return;
+					}
+					if(msg =="noLevel")
+					{
+						alert("请选择检查层级！！");
+						return;
+					}
+					else{
+						$('#content').empty();
+						$('#content').html(msg);
+					}
+
+				}
+			});
+		}) ;
+		//绑定导出按钮
+		$('#buttonExport').bind('click', function() {
+            //打开新连接，相当于超链接效果。导出excel表
+			//excel导出，前台通过跳转方式请求，不能通过ajax方式请求，否则无效。
+			window.location.href ="/index/Normalcheck/exportOutsourceCheckRecordInfo?beginDate="+
+								  $('#datepickerBeginDate').val()+"&endDate="+$('#datepickerEndDate').val()+
+					              "&selectCheckLevel="+$('#selectCheckLevel').val()+"&selectCheckTeam="+$('#selectCheckTeam').val()+
+					              "&selectCheckKind="+$('#selectCheckKind').val();
+		});
+		//绑定上传按钮
+		$('#buttonUpload').bind('click', function() {
+			//alert("11");
+			//获取上传文件文件名称。
+			var file = $('#myfile').val();
+			var pos=file.lastIndexOf("\\");//获取最后一个\的位置
+			var filename =  file.substring(pos+1);//截取最后一个\后面的文字
+			
+            $("#formUpload").ajaxSubmit({
+            	url: '/index/Normalcheck/importOutsourceCheckInfo', /*设置post提交到的页面*/
+                data: {
+                    'filename': filename
+                },
+                beforeSend : function(XMLHttpRequest) {
+                    $('#content').empty();
+                    $("#content").html("<div style='background-image:url(../../static/Images/loading.gif);background-position:left; background-repeat:no-repeat; font-size:14px; padding-left:20px; text-align:left;height:20px;line-height:20px;'>正在上传，请稍后。。。</div>");
+                },
+                success: function (data) {
+                	if(data == "noUpload")
+                		{
+                			var str ="<h1 align='center'><font  face='verdana'>未选择上传文件！！</font></h1>";
+            				$('#content').empty();
+        					$('#content').html(str);
+                		}
+                	else if(data == "overMaxSize")
+                		{
+                			var str ="<h1 align='center'><font  face='verdana'>上传文件超过5M！！</font></h1>";
+            				$('#content').empty();
+        					$('#content').html(str);
+                		}
+                	else
+                		{
+	        				$('#content').empty();
+	    					$('#content').html(data);
+                		}
+                },
+                error: function (error) {
+                	//$('#content').empty();
+					//$('#content').html(error); 
+				},
+                type: "post", /*设置表单以post方法提交*/
+                dataType: "json" /*设置返回值类型为文本*/
+            });
+            //alert("22");
+		});
+	});//初始化末尾
+	function getOutsourceCheckLevelList() {
+		$.ajax({
+			type : 'post',
+			url : '/index/Normalcheck/getOutsourceCheckLevelList',
+			cache : false,
+			success : function(msg) {
+				$('#selectCheckLevel').empty();
+				var str = "<option  value=" + '0' + ">" + "————"
+						+ "</option>";
+				$(str).appendTo("#selectCheckLevel");
+				$(msg).each(
+						function(i, item) {
+							var str = "<option  value=" + item.outsource_check_info_level + ">"
+									+ item.outsource_check_info_level + "</option>";
+							$(str).appendTo("#selectCheckLevel");
+						});
+			}
+		});
+	}
+	function getOutsourceCheckTeamList() {
+		$.ajax({
+			type : 'post',
+			url : '/index/Normalcheck/getOutsourceCheckTeamList',
+			cache : false,
+			success : function(msg) {
+				$('#selectCheckTeam').empty();
+				var str = "<option  value=" + '0' + ">" + "————"
+						+ "</option>";
+				$(str).appendTo("#selectCheckTeam");
+				$(msg).each(
+						function(i, item) {
+							var str = "<option  value=" + item.outsource_check_info_team + ">"
+									+ item.outsource_check_info_team + "</option>";
+							$(str).appendTo("#selectCheckTeam");
+						});
+			}
+		});
+	}
+	function getOutsourceCheckkindList() {
+		$.ajax({
+			type : 'post',
+			url : '/index/Normalcheck/getOutsourceCheckkindList',
+			cache : false,
+			success : function(msg) {
+				$('#selectCheckKind').empty();
+				var str = "<option  value=" + '0' + ">" + "————"
+						+ "</option>";
+				$(str).appendTo("#selectCheckKind");
+				$(msg).each(
+						function(i, item) {
+							var str = "<option  value=" + item.outsource_check_info_kind + ">"
+									+ item.outsource_check_info_kind + "</option>";
+							$(str).appendTo("#selectCheckKind");
+						});
+			}
+		});
+	}
+	
+	function datapickerInit(){
+		 $(".datepicker").datepicker({
+	            language: "zh-CN",
+	            autoclose: true,//选中之后自动隐藏日期选择框
+	            clearBtn: true,//清除按钮
+	            //todayBtn: true,//今日按钮
+	            format: "yyyy-mm-dd"//日期格式，详见 http://bootstrap-datepicker.readthedocs.org/en/release/options.html#format
+	        	});
+	}
+</script>

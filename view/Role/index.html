@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap-responsive.css" />
+<link rel="stylesheet" type="text/css" href="../../static/Css/style.css" />
+<script type="text/javascript" src="../../static/Js/jquery.js"></script>
+
+<script type="text/javascript" src="../../static/Js/bootstrap.js"></script>
+<script type="text/javascript" src="../../static/Js/ckform.js"></script>
+<script type="text/javascript" src="../../static/Js/common.js"></script>
+
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+</style>
+</head>
+<body>
+	<div>
+		<table class="table table-bordered table-hover definewidth m10">
+			<tr>
+				<td>角色组管理</td>
+			</tr>
+			<tr>
+				<td>
+					<button type="button" id="buttonRoleSearch"
+						class="btn btn-primary btn-lg">
+						<span class="icon-search"> </span> 查询
+					</button>
+				</td>
+				<td>
+					<button type="button" id="buttonRoleAdd"
+						class="btn btn-success btn-lg">
+						<span class=" icon-plus"> </span> 新增
+					</button>
+				</td>
+				<td>选择编辑或删除角色：</td>
+				<td><select id="selectRoleList">
+						<option value="0">——请选择角色——</option>
+				</select>
+				<p class="text-info" id="pThirdAddReturnText"></p>
+				</td>
+				<td>
+					<button type="button" id="buttonRoleEdit"
+						class="btn btn-info btn-lg">
+						<span class=" icon-edit"> </span> 编辑
+					</button>
+				</td>
+				<td>
+					<button type="button" id="buttonRoleDelete"
+						class="btn btn-danger btn-lg">
+						<span class="icon-remove"> </span> 删除
+					</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div id="content" style="margin: 10px"></div>
+</body>
+</html>
+<script>
+	$().ready(function() {
+		getRoleList();
+		//绑定"查询"按键
+		$('#buttonRoleSearch').bind('click', function() {
+			$('#pThirdAddReturnText').empty();
+			$.ajax({
+				type : 'post',
+				url : '/index/Role/roleSearch',
+				cache : false,
+				success : function(msg) {
+					$('#content').empty();
+					$('#content').html(msg);
+				}
+			});
+		});
+		//绑定"新增"按键
+		$('#buttonRoleAdd').bind('click', function() {
+			$('#pThirdAddReturnText').empty();
+			$.ajax({
+				type : 'post',
+				url : '/index/Role/roleAdd',
+				cache : false,
+				success : function(msg) {
+					$('#content').empty();
+					$('#content').html(msg);
+				}
+			});
+		});
+		//绑定"编辑"按键
+		$('#buttonRoleEdit').bind('click', function() {
+			$('#pThirdAddReturnText').empty();
+			if ($('#selectRoleList').val() == "0") {
+				$('#pThirdAddReturnText').html("请选择操作角色！！！");
+				return;
+			}
+			var data = {
+				roleName : $('#selectRoleList').val()
+			};
+			$.ajax({
+				type : 'post',
+				data : data,
+				url : '/index/Role/roleEdit',
+				cache : false,
+				success : function(msg) {
+					$('#content').empty();
+					$('#content').html(msg);
+				}
+			});
+		});
+
+	});
+	//绑定"删除"按键
+	$('#buttonRoleDelete').bind('click', function() {
+		$('#pThirdAddReturnText').empty();
+		if ($('#selectRoleList').val() == "0") {
+			$('#pThirdAddReturnText').html("请选择操作角色！！！");
+			return;
+		}
+		var data = {
+			roleName : $('#selectRoleList').val()
+		};
+		$.ajax({
+			type : 'post',
+			data : data,
+			url : '/index/Role/roleDelete',
+			cache : false,
+			success : function(msg) {
+				if (msg) {
+					$('#pThirdAddReturnText').html("删除成功！！");
+					getRoleList();
+				} else {
+					$('#pThirdAddReturnText').html("删除失败！！");
+				}
+				//$('#content').empty();
+				//$('#content').html(msg);
+			}
+		});
+	});
+	function getRoleList() {
+		$.ajax({
+			type : 'post',
+			url : '/index/Role/getRoleList',
+			cache : false,
+			success : function(msg) {
+				$('#selectRoleList').empty();
+				var str = "<option  value=" + '0' + ">" + "——请选择角色——"
+						+ "</option>";
+				$(str).appendTo("#selectRoleList");
+				$(msg).each(
+						function(i, item) {
+							var str = "<option  value=" + item.title + ">"
+									+ item.title + "</option>";
+							$(str).appendTo("#selectRoleList");
+						});
+			}
+		});
+	}
+</script>

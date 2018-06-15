@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap-datepicker.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap-responsive.css" />
+<link rel="stylesheet" type="text/css" href="../../static/Css/style.css" />
+
+<link rel="stylesheet" type="text/css"
+	href="../../DataTables/media/css/jquery.dataTables.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../DataTables/media/css/dataTables.bootstrap.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../DataTables/Buttons-1.4.2/css/buttons.dataTables.min.css" />
+	
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/media/js/jquery.js"></script>
+
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/media/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/media/js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/Buttons-1.4.2/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/Buttons-1.4.2/js/buttons.flash.min.js"></script>
+<script type="text/javascript" charset="utf8"
+	src="../../DataTables/media/js/dataTables.select.min.js"></script>
+
+
+<!--<script type="text/javascript" src="../../static/Js/jquery.js"></script>  -->
+<script type="text/javascript" src="../../static/Js/bootstrap.js"></script>
+<script type="text/javascript" src="../../static/Js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="../../static/Js/bootstrap-datepicker.zh-CN.min.js"></script>
+<script type="text/javascript" src="../../static/Js/ckform.js"></script>
+<script type="text/javascript" src="../../static/Js/common.js"></script>
+<script type="text/javascript" src="../../static/Js/jquery.form.min.js"></script>
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<table id="tableStaffBirthControlInfoList" class="display" cellspacing="0"
+			width="100%">
+			<thead>
+				<tr>
+					<th>部门</th>
+					<th>员工号</th>
+					<th>姓名</th>
+					<th>性别</th>
+					<th>籍贯</th>
+					<th>是否独生子女</th>
+					<th>婚姻状况</th>
+					<th>操作</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<th>部门</th>
+					<th>员工号</th>
+					<th>姓名</th>
+					<th>性别</th>
+					<th>籍贯</th>
+					<th>是否独生子女</th>
+					<th>婚姻状况</th>
+					<th>操作</th>
+					<th>操作</th>
+				</tr>
+			</tfoot>
+			<tbody align="center"></tbody>
+		</table>
+	</div>
+	<div id="content" style="margin: 10px"></div>
+	
+	
+	<!-- 模态对话框显示内容  -->
+	<!-- Modal -->	
+	<div id="addModal" class="modal hide fade" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">×</button>
+			<h3 id="addModalLabel">添加人员</h3>
+		</div>
+		<div class="modal-body">
+			<table>
+				<tr>
+					<td><p>员工号</p></td>
+					<td><input id="addModalText" type="text" placeholder="新增部门名称"></td>
+
+					
+				</tr>
+			</table>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			<button id = "addSave"class="btn btn-primary">保存</button>
+		</div>
+	</div>
+	<!-- 模态对话框显示内容  -->
+	
+	
+	<!-- 模态对话框显示内容  -->
+	<!-- Modal -->
+	<div id="editModal" class="modal hide fade" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true" ><!-- style="width:1100px,margin-left:20px" -->
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">×</button>
+			<h3 id="addModalLabel">计生信息详情</h3>
+		</div>
+		<div class="modal-body">
+		<form enctype="multipart/form-data" id = "editForm">
+			<table >
+				<tr>
+					<td style=" text-align:right"><h5>中心:</h5></td>
+					<td><input type ="text"  name="textCenter"  id="textCenter"></input></td>
+					<td style=" text-align:right"><h5>部门:</h5></td>
+					<td><input type ="text"  name="textDepartment"  id="textDepartment"></input></td>
+					<td style=" text-align:right"><h5>员工号:</h5></td>
+					<td><input type ="text" name ="textUserID"  id="textUserID" width="50px"></input></td>
+				</tr>
+			    <tr>
+					<td style=" text-align:right"><h5>姓名:</h5></td>
+					<td><input type ="text"  name="textName"  id="textName"></input></td>
+					<td style=" text-align:right"><h5>姓别:</h5></td>
+					<td><input type ="text"  name="textSex"  id="textSex"></input></td>
+					<td style=" text-align:right"><h5>出生年月日:</h5></td>
+					<td><input type ="text"  name="textEmployeeBirthday"  id="textEmployeeBirthday"></input></td>
+				</tr>
+			    <tr>
+					<td style=" text-align:right"><h5>民族:</h5></td>
+					<td><input type ="text"  name="textNation"  id="textNation"></input></td>
+					<td style=" text-align:right"><h5>籍贯:</h5></td>
+					<td><input type ="text"  name="textJIGUAN"  id="textJIGUAN"></input></td>
+					<td style=" text-align:right"><h5>是否独生子女（指本人）:</h5></td>
+					<td><input type ="text"  name="textIshaveone"  id="textIshaveone"></input></td>
+				</tr>
+			    <tr>
+					<td style=" text-align:right"><h5>入司时间:</h5></td>
+					<td><input type ="text"  name="textInCompanyDate"  id="textInCompanyDate"></input></td>
+					<td style=" text-align:right"><h5>用工性质:</h5></td>
+					<td><input type ="text"  name="textNatureOfEmployment"  id="textNatureOfEmployment"></input></td>
+					<td style=" text-align:right"><h5>职务:</h5></td>
+					<td><input type ="text"  name="textEmployeePost"  id="textEmployeePost"></input></td>
+				</tr>
+			    <tr>
+					<td style=" text-align:right"><h5>身份证号:</h5></td>
+					<td><input type ="text"  name="textEmployeeIdentity"  id="textEmployeeIdentity"></input></td>
+					<td style=" text-align:right"><h5>户口性质:</h5></td>
+					<td><input type ="text"  name="textEmployeeCensusRegister"  id="textEmployeeCensusRegister"></input></td>
+					<td style=" text-align:right"><h5>户籍性质:</h5></td>
+					<td><input type ="text"  name="textEmployeeHouseholdRegister"  id="textEmployeeHouseholdRegister"></input></td>
+				</tr>
+			    <tr>
+					<td style=" text-align:right"><h5>流动人口婚育证明发证时间:</h5></td>
+					<td><input type ="text"  name="textMaritalCertifyDate"  id="textMaritalCertifyDate"></input></td>
+					<td style=" text-align:right"><h5>流动人口婚育证明到期时间:</h5></td>
+					<td><input type ="text"  name="textMaritalCertifyExpireDate"  id="textMaritalCertifyExpireDate"></input></td>
+					<td style=" text-align:right"><h5>户籍地址:</h5></td>
+					<td><input type ="text"  name="text_employee_household_register_address"  id="text_employee_household_register_address"></input></td>
+				</tr>
+			    <tr>
+					<td style=" text-align:right"><h5>现住址:</h5></td>
+					<td><input type ="text"  name="text_employee_always_live"  id="text_employee_always_live"></input></td>
+					<td style=" text-align:right"><h5>合同期:</h5></td>
+					<td><input type ="text"  name="text_employee_contract_term"  id="text_employee_contract_term"></input></td>
+					<td style=" text-align:right"><h5>联系电话:</h5></td>
+					<td><input type ="text"  name="text_employee_phone_number"  id="text_employee_phone_number"></input></td>
+				</tr>
+			    <tr>
+					<td style=" text-align:right"><h5>婚姻状况(指本人):</h5></td>
+					<td><input type ="text"  name="text_employee_marital"  id="text_employee_marital"></input></td>
+					<td style=" text-align:right"><h5>婚姻时间:</h5></td>
+					<td><input type ="text"  name="text_employee_marital_date"  id="text_employee_marital_date"></input></td>
+					<td style=" text-align:right"><h5>是否双职工:</h5></td>
+					<td><input type ="text"  name="text_control_info_is_two_employee"  id="text_control_info_is_two_employee"></input></td>
+				</tr>
+			    <tr>
+					<td style=" text-align:right"><h5>配偶姓名:</h5></td>
+					<td><input type ="text"  name="text_spouse_name"  id="text_spouse_name"></input></td>
+					<td style=" text-align:right"><h5>民族:</h5></td>
+					<td><input type ="text"  name="text_spouse_nation"  id="text_spouse_nation"></input></td>
+					<td style=" text-align:right"><h5>出生年月日:</h5></td>
+					<td><input type ="text"  name="text_spouse_birthday"  id="text_spouse_birthday"></input></td>
+				</tr>
+			    <tr>
+					<td style=" text-align:right"><h5>身份证号:</h5></td>
+					<td><input type ="text"  name="text_spouse_identity"  id="text_spouse_identity"></input></td>
+					<td style=" text-align:right"><h5>户口性质:</h5></td>
+					<td><input type ="text"  name="text_spousee_census_register"  id="text_spousee_census_register"></input></td>
+					<td style=" text-align:right"><h5>户籍性质:</h5></td>
+					<td><input type ="text"  name="text_spouse_household_register"  id="text_spouse_household_register"></input></td>
+				</tr>
+			    <tr>
+					<td style=" text-align:right"><h5>户籍地址:</h5></td>
+					<td><input type ="text"  name="text_spouse_household_register_address"  id="text_spouse_household_register_address"></input></td>
+					<td style=" text-align:right"><h5>工作单位:</h5></td>
+					<td><input type ="text"  name="text_spouse_work"  id="text_spouse_work"></input></td>
+					<td style=" text-align:right"><h5>节育措施:</h5></td>
+					<td><input type ="text"  name="text_measure"  id="text_measure"></input></td>
+				</tr>
+			    <tr>
+					<td style=" text-align:right"><h5>是否独生子女（指配偶）:</h5></td>
+					<td><input type ="text"  name="text_spouse_is_have_one"  id="text_spouse_is_have_one"></input></td>
+					<td style=" text-align:right"><h5>联系电话:</h5></td>
+					<td><input type ="text"  name="text_spouse_phone_number"  id="text_spouse_phone_number"></input></td>
+					<td style=" text-align:right"><h5>子女个数:</h5></td>
+					<td><input type ="text"  name="text_children_count"  id="text_children_count"></input></td>
+				</tr>
+			    <tr>
+					<td style=" text-align:right"><h5>子女姓名:</h5></td>
+					<td><input type ="text"  name="text_children_name"  id="text_children_name"></input></td>
+					<td style=" text-align:right"><h5>性别:</h5></td>
+					<td><input type ="text"  name="text_children_sex"  id="text_children_sex"></input></td>
+					<td style=" text-align:right"><h5>出生年月日:</h5></td>
+					<td><input type ="text"  name="text_children_birthday"  id="text_children_birthday"></input></td>
+				</tr>
+			    <tr>
+					<td style=" text-align:right"><h5>子女属性:</h5></td>
+					<td><input type ="text"  name="text_children_nature"  id="text_children_nature"></input></td>
+					<td style=" text-align:right"><h5>计划内外:</h5></td>
+					<td><input type ="text"  name="text_inout_plan"  id="text_inout_plan"></input></td>
+					<td style=" text-align:right"><h5>生育证办证时间:</h5></td>
+					<td><input type ="text"  name="text_birth_certify_date"  id="text_birth_certify_date"></input></td>
+				</tr>
+			    <tr>
+					<td style=" text-align:right"><h5>生育证编号:</h5></td>
+					<td><input type ="text"  name="text_birth_certify_ID"  id="text_birth_certify_ID"></input></td>
+					<td style=" text-align:right"><h5>办证部门:</h5></td>
+					<td><input type ="text"  name="text_birth_certify_address"  id="text_birth_certify_address"></input></td>
+					<td style=" text-align:right"><h5>是否办理独生子女证:</h5></td>
+					<td><input type ="text"  name="text_employee_is_have_one_certify"  id="text_employee_is_have_one_certify"></input></td>
+				</tr>
+			    <tr>
+					<td style=" text-align:right"><h5>独生子女证办理时间:</h5></td>
+					<td><input type ="text"  name="text_employee_have_one_certify_date"  id="text_employee_have_one_certify_date"></input></td>
+					<td style=" text-align:right"><h5>独生子女证号:</h5></td>
+					<td><input type ="text"  name="text_employee_have_one_certify_ID"  id="text_employee_have_one_certify_ID"></input></td>
+					<td style=" text-align:right"><h5>发证单位:</h5></td>
+					<td><input type ="text"  name="text_employee_have_one_certify_address"  id="text_employee_have_one_certify_address"></input></td>
+				</tr>
+			    <tr>
+					<td style=" text-align:right"><h5>修改内容:</h5></td>
+					<td><input type ="text"  name="text_updata_info"  id="text_updata_info"></input></td>
+					<td style=" text-align:right"><h5>修改月份:</h5></td>
+					<td><input type ="text"  name="text_updata_date"  id="text_updata_date"></input></td>
+				</tr>
+			</table>
+		  </form>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			<!--<button id = "editSave"class="btn btn-primary">更新</button>-->
+		</div>
+	</div>
+	<!-- 模态对话框显示内容  -->
+</body>
+</html>
+<script>
+	$(document).ready(function(){
+		datapickerInit();
+	    //使用表格控件DataTables配置项
+	    var data = {$selectBirthControlInfo}; 
+	    var table =  $('#tableStaffBirthControlInfoList').DataTable({
+	    	data: data,
+	    	columns: [
+	                  { sWidth: "50px",data: 'birth_control_info_department' },
+	                  { sWidth: "50px",data: 'birth_control_info_employee_id' },
+	                  { sWidth: "50px",data: 'birth_control_info_employee_name' },
+	                  { sWidth: "50px",data: 'birth_control_info_employee_sex' },
+	                  { sWidth: "50px",data: 'birth_control_info_employee_JIGUAN' },
+	                  { sWidth: "50px",data: 'birth_control_info_employee_is_have_one' },
+	                  { sWidth: "50px",data: 'birth_control_info_employee_marital' },
+                      { sWidth: "20px",mRender: function(data, type,full,meta) {  
+                    	  //使用JSON.stringify(full)方法，将对象full转为JSON数据格式，作为函数参数传递
+                          return "<a href ='#'  class='btn btn-info btn-lg' onclick='return editSingle("+JSON.stringify(full)+")'><span class='icon-edit'></span>详情</a>";  
+                      	}
+                      },
+                      { sWidth: "20px",mRender: function(data, type,row, full) { 
+                          return '<a href ="#"  class="btn btn-danger btn-lg" onclick="return delSingle('+row.birth_control_info_employee_id+');"><span class="icon-edit"></span>删除</a>';  
+                      	}
+                      }
+	              ],
+            iDisplayLength : 10, //默认显示的记录数 
+	    	bProcessing: true, //DataTables载入数据时，是否显示‘进度’提示  
+	    	bPaginate: true, //翻页功能
+	    	bLengthChange: true, //改变每页显示数据数量
+	    	bFilter: true, //过滤功能
+	    	bSort: true, //排序功能
+	    	bInfo: true,//页脚信息
+	    	bAutoWidth: true,//自动宽度
+	    	sPaginationType: "full_numbers",//显示数字的翻页样式
+	    		oLanguage: {
+	    			sLengthMenu: "每页显示 _MENU_ 条记录",
+	    			sZeroRecords: "抱歉， 没有找到",
+	    			sInfo: "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+	    			//sInfoEmpty: "没有数据",
+	    			sInfoFiltered: "(从 _MAX_ 条数据中检索)",
+	    			oPaginate: {
+	    			sFirst: "首页",
+	    			sPrevious: "前一页",
+	    			sNext: "后一页",
+	    			sLast: "尾页"
+	    			},
+	    			sZeroRecords: "没有检索到数据",
+	    			sProcessing : "正在获取数据，请稍后..."
+	    	},
+ 			//dom: '<"clear">lfrtip',
+ 			select: true,
+	       //dom: 'B<"top"lf>rt<"bottom"ip><"clear">',
+	       /*buttons: {
+	           buttons: [
+	               {
+	                   text: '新增',
+	                   classname:'btn btn-info btn-lg',
+	                   action: function ( dt ) {
+	                       //alert(dt.column(2).data());
+	                       //alert(this.column(2).data());
+	                	   //this.disable();
+	        			   $('#addModal').modal({
+	        				   //keyboard: false
+	        				 });
+	                   }
+	               }
+	           ]
+	       }*/
+/*	        buttons: {
+	            name: 'primary',
+	            buttons: [ 'copy', 'csv', 'excel' ]
+	        }*/
+	     		//dom: 'Bfrtip',
+	     		/* buttons: [
+	     		          {
+	     		              extend: 'excel',
+	     		              text: '导出',
+	     		              exportOptions: {
+	     		                  modifier: {
+	     		                      page: 'current'
+	     		                  }
+	     		              }
+	     		          }
+	     		      ]
+	    		*/
+	    });// $('#tableDepartmentList').DataTable结尾	
+		//绑定模态对话框   编辑   按钮
+		$('#addSave').bind('click', function() {
+			if($('#addModalText').val()=="")
+				{
+					alert("新增部门名称不能为空！！");
+					return;
+				}
+			var data = {
+					departmentName : $('#addModalText').val()
+				};
+			
+			$.ajax({
+				type : 'post',
+				data : data,
+				url : '/index/Staff/departmentAdd',
+				cache : false,
+				success : function(msg) {
+					if(msg)
+						{
+							//$('#addSave').modal('toggle');
+							$('#addModal').modal('hide');
+						}
+					else{
+						alert("新增失败！！");
+					}
+				}
+			});
+		});
+		/*
+		 *  绑定模态对话框   ---------更新-----------  按钮
+		*/
+		$('#editSave').bind('click', function() {
+			
+            $("#editForm").ajaxSubmit({
+            	url: '/index/Staff/updataStaffInfo', /*设置post提交到的页面*/
+                success: function (data) {
+                	if(data)
+                		{
+                			alert("更新成功！！！");
+                		}
+                	else
+                		{
+                			alert("更新失败！！！");
+                		}
+                	
+                },
+                error: function (error) {
+                	//$('#content').empty();
+					//$('#content').html(error); 
+					
+				},
+                type: "post", /*设置表单以post方法提交*/
+                dataType: "json" /*设置返回值类型为文本*/
+            });
+			
+			
+		});
+		//新增弹框页面：：关闭后触发事件
+	    $('#addModal').on('hidden', function () {
+	    	reflashMain();
+	      });
+		//详情弹框页面：：关闭后触发事件
+	    $('#editModal').on('hidden', function () {
+	    	reflashMain();
+	      });
+		
+	 });/*初始化末尾*/	    
+		/*
+		* 每行点击详情按钮，展示个人信息
+		*/
+		function editSingle(row)
+		{
+		 	//显示模态对话框，并设置位置
+		 	 $('#editModal').modal('show').css({
+		 				"width": '900px',
+		 		  		"margin-left": "-500px"
+                    }); 
+			 //$('#editModal').modal();
+			 $('#textCenter').val(row.birth_control_info_center);		 	 
+			 $('#textDepartment').val(row.birth_control_info_department);		 	 
+			 $('#textUserID').val(row.birth_control_info_employee_id);		 	 
+			 $('#textName').val(row.birth_control_info_employee_name);		 	 
+			 $('#textSex').val(row.birth_control_info_employee_sex);		 	 
+			 $('#textEmployeeBirthday').val(row.birth_control_info_employee_birthday);		 	 
+			 $('#textNation').val(row.birth_control_info_employee_nation);		 	 
+			 $('#textJIGUAN').val(row.birth_control_info_employee_JIGUAN);		 	 
+			 $('#textIshaveone').val(row.birth_control_info_employee_is_have_one);		 	 
+			 $('#textInCompanyDate').val(row.birth_control_info_employee_in_company_date);		 	 
+			 $('#textNatureOfEmployment').val(row.birth_control_info_nature_of_employment);		 	 
+			 $('#textEmployeePost').val(row.birth_control_info_employee_post);		 	 
+			 $('#textEmployeeIdentity').val(row.birth_control_info_employee_identity);		 	 
+			 $('#textEmployeeCensusRegister').val(row.birth_control_info_employee_census_register);		 	 
+			 $('#textEmployeeHouseholdRegister').val(row.birth_control_info_employee_household_register);		 	 
+			 $('#textMaritalCertifyDate').val(row.birth_control_info_marital_certify_date);		 	 
+			 $('#textMaritalCertifyExpireDate').val(row.birth_control_info_marital_certify_expire_date);		 	 
+			 $('#text_employee_household_register_address').val(row.birth_control_info_employee_household_register_address);		 	 
+			 $('#text_employee_always_live').val(row.birth_control_info_employee_always_live);		 	 
+			 $('#text_employee_contract_term').val(row.birth_control_info_employee_contract_term);		 	 
+			 $('#text_employee_phone_number').val(row.birth_control_info_employee_phone_number);		 	 
+			 $('#text_employee_marital').val(row.birth_control_info_employee_marital);		 	 
+			 $('#text_employee_marital_date').val(row.birth_control_info_employee_marital_date);		 	 
+			 $('#text_control_info_is_two_employee').val(row.birth_control_info_is_two_employee);		 	 
+			 $('#text_spouse_name').val(row.birth_control_info_spouse_name);		 	 
+			 $('#text_spouse_nation').val(row.birth_control_info_spouse_nation);		 	 
+			 $('#text_spouse_birthday').val(row.birth_control_info_spouse_birthday);		 	 
+			 $('#text_spouse_identity').val(row.birth_control_info_spouse_identity);		 	 
+			 $('#text_spousee_census_register').val(row.birth_control_info_spousee_census_register);		 	 
+			 $('#text_spouse_household_register').val(row.birth_control_info_spouse_household_register);		 	 
+			 $('#text_spouse_household_register_address').val(row.birth_control_info_spouse_household_register_address);		 	 
+			 $('#text_spouse_work').val(row.birth_control_info_spouse_work);		 	 
+			 $('#text_measure').val(row.birth_control_info_measure);		 	 
+			 $('#text_spouse_is_have_one').val(row.birth_control_info_spouse_is_have_one);		 	 
+			 $('#text_spouse_phone_number').val(row.birth_control_info_spouse_phone_number);		 	 
+			 $('#text_children_count').val(row.birth_control_info_children_count);		 	 
+			 $('#text_children_name').val(row.birth_control_info_children_name);		 	 
+			 $('#text_children_sex').val(row.birth_control_info_children_sex);		 	 
+			 $('#text_children_birthday').val(row.birth_control_info_children_birthday);		 	 
+			 $('#text_children_nature').val(row.birth_control_info_children_nature);		 	 
+			 $('#text_inout_plan').val(row.birth_control_info_inout_plan);		 	 
+			 $('#text_birth_certify_date').val(row.birth_control_info_birth_certify_date);		 	 
+			 $('#text_birth_certify_ID').val(row.birth_control_info_birth_certify_ID);		 	 
+			 $('#text_birth_certify_address').val(row.birth_control_info_birth_certify_address);		 	 
+			 $('#text_employee_is_have_one_certify').val(row.birth_control_info_employee_is_have_one_certify);		 	 
+			 $('#text_employee_have_one_certify_date').val(row.birth_control_info_employee_have_one_certify_date);		 	 
+			 $('#text_employee_have_one_certify_ID').val(row.birth_control_info_employee_have_one_certify_ID);		 	 
+			 $('#text_employee_have_one_certify_address').val(row.birth_control_info_employee_have_one_certify_address);		 	 
+			 $('#text_updata_info').val(row.birth_control_info_updata_info);		 	 
+			 $('#text_updata_date').val(row.birth_control_info_updata_date);		 	 
+		};
+		function delSingle(id)
+		{
+			var data = {
+					staffID : id
+				};
+			$.ajax({
+				type : 'post',
+				data : data,
+				url : '/index/Staff/staffBirthControlRecordDelete',
+				cache : false,
+				success : function(msg) {
+					if(msg)
+					{
+						reflashMain();
+					}
+					else{
+						alert("删除失败！！");
+					}
+				}
+			});
+		};
+		//相当于刷新页面，重新查询显示
+		function reflashMain()
+		{
+			var data = {
+				subsectionID : $('#selectSubsectionList option:selected').text(),
+				userName : $('#userName').val(),
+				userID : $('#userID').val()
+			};
+			$.ajax({
+				type : 'post',
+				data : data,
+				url : '/index/Staff/birthControlInfoRecordSearch',
+				cache : false,
+				success : function(msg) {
+					$('#content').empty();
+					$('#content').html(msg);
+				}
+			});
+		}
+		function datapickerInit(){
+			 $(".datepicker").datepicker({
+		            language: "zh-CN",
+		            autoclose: true,//选中之后自动隐藏日期选择框
+		            clearBtn: true,//清除按钮
+		            //todayBtn: true,//今日按钮
+		            format: "yyyy-mm-dd"//日期格式，详见 http://bootstrap-datepicker.readthedocs.org/en/release/options.html#format
+		        	});
+		}
+</script>

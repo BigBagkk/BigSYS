@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/Css/bootstrap-responsive.css" />
+<link rel="stylesheet" type="text/css" href="../../static/Css/style.css" />
+<script type="text/javascript" src="../../static/Js/jquery.js"></script>
+<script type="text/javascript" src="../../static/Js/bootstrap.js"></script>
+<script type="text/javascript" src="../../static/Js/ckform.js"></script>
+<script type="text/javascript" src="../../static/Js/common.js"></script>
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+</style>
+</head>
+<body>
+	<div>
+		<table class="table table-bordered table-hover definewidth m10">
+			<tr>
+				<td>
+					<button type="button" id="buttonDepartmentAdmin"
+						class="btn btn-info btn-lg">
+						<span class=" icon-edit"> </span> 部门信息管理
+					</button>
+				</td>
+				<td>
+					<button type="button" id="buttonSubsectionAdmin"
+						class="btn btn-info btn-lg">
+						<span class=" icon-edit"> </span> 分部、中心站信息管理
+					</button>
+				</td>
+				<td>
+					<button type="button" id="buttonTeamAdmin"
+						class="btn btn-info btn-lg">
+						<span class=" icon-edit"> </span> 班组信息管理
+					</button>
+				</td>
+				<td>
+					<button type="button" id="buttonPostAdmin"
+						class="btn btn-info btn-lg">
+						<span class=" icon-edit"> </span> 岗位信息管理
+					</button>
+				</td>
+				<td>
+					<button type="button" id="buttonRankAdmin"
+						class="btn btn-info btn-lg">
+						<span class=" icon-edit"> </span> 岗位职级信息管理
+					</button>
+				</td>
+				<td>
+					<button type="button" id="buttonNotOnTheJobAdmin"
+						class="btn btn-info btn-lg">
+						<span class=" icon-edit"> </span> 不在岗信息管理
+					</button>
+				</td>
+				<td>
+					<button type="button" id="buttonMaritalAdmin"
+						class="btn btn-info btn-lg">
+						<span class=" icon-edit"> </span> 婚姻信息管理
+					</button>
+				</td>
+				<td>
+					<button type="button" id="buttonPoliticsAdmin"
+						class="btn btn-info btn-lg">
+						<span class=" icon-edit"> </span> 政治面貌信息管理
+					</button>
+				</td>
+				<td>
+					<button type="button" id="buttonNationAdmin"
+						class="btn btn-info btn-lg">
+						<span class=" icon-edit"> </span> 民族信息管理
+					</button>
+				</td>
+				<td>
+					<button type="button" id="buttonHouseholdRegisterAdmin"
+						class="btn btn-info btn-lg">
+						<span class=" icon-edit"> </span> 户籍性质信息管理
+					</button>
+				</td>
+				<td>
+					<button type="button" id="buttonEducationAdmin"
+						class="btn btn-info btn-lg">
+						<span class=" icon-edit"> </span> 学历信息管理
+					</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div id="content" style="margin: 10px"></div>
+	</body>
+</html>
+<script>
+$().ready(function(){
+	//绑定部门信息管理按钮
+	$('#buttonDepartmentAdmin').bind('click', function() {
+		$.ajax({
+			type : 'post',
+			url : '/index/Staff/departmentAdmin',
+			cache : false,
+			success : function(msg) {
+				$('#content').empty();
+				$('#content').html(msg);
+			}
+		});
+	});
+	//绑定分部信息管理按钮
+	$('#buttonSubsectionAdmin').bind('click', function() {
+		$.ajax({
+			type : 'post',
+			url : '/index/Staff/subsectionAdmin',
+			cache : false,
+			success : function(msg) {
+				$('#content').empty();
+				$('#content').html(msg);
+			}
+		});
+	});
+	//绑定班组信息管理按钮
+	$('#buttonTeamAdmin').bind('click', function() {
+		$.ajax({
+			type : 'post',
+			url : '/index/Staff/teamAdmin',
+			cache : false,
+			success : function(msg) {
+				$('#content').empty();
+				$('#content').html(msg);
+			}
+		});
+	});
+});
+
+</script>

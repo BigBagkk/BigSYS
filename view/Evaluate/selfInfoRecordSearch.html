@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="../../static/Css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../static/Css/bootstrap-responsive.css" />
+		<link rel="stylesheet" type="text/css" href="../../static/Css/style.css" />
+		<script type="text/javascript" src="../../static/Js/jquery.js"></script>
+		<script type="text/javascript" src="../../static/Js/bootstrap.js"></script>
+		<script type="text/javascript" src="../../static/Js/ckform.js"></script>
+		<script type="text/javascript" src="../../static/Js/common.js"></script>
+		<style type="text/css">
+			body {
+				padding-bottom: 40px;
+			}
+			.sidebar-nav {
+				padding: 9px 0;
+			}
+			@media (max-width: 980px) {
+				/* Enable use of floated navbar text */
+				.navbar-text.pull-right {
+					float: none;
+					padding-left: 5px;
+					padding-right: 5px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<table  class="table table-condensed table-bordered table-hover"  style="margin:5px" >
+			<thead >
+				<tr>
+					<th nowrap="nowrap">序号</th>
+					<th nowrap="nowrap">生产序列</th>
+					<th nowrap="nowrap">专业</th>
+					<th nowrap="nowrap">分部、中心站</th>
+					<th nowrap="nowrap">工班、自然站</th>
+					<th nowrap="nowrap">员工姓名</th>
+					<th nowrap="nowrap">员工编号</th>
+					<th nowrap="nowrap">在聘岗位</th>
+					<th nowrap="nowrap">月度工作绩效评价得分</th>
+					<th nowrap="nowrap">排名</th>
+					<th nowrap="nowrap">月度评价结果（A\B\C\D档）</th>
+					<th nowrap="nowrap">年份</th>
+					<th nowrap="nowrap">月份</th>
+					<th nowrap="nowrap">结果备注</th>
+					<th nowrap="nowrap">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{volist name = "selectEvaluateSelfInfo" id="vo"}
+					<tr>
+						<td>{$i}</td>
+						<!-- <td nowrap="nowrap">{$vo.id}</td> -->
+						<td>{$vo.evaluate_self_info_sequence}</td>
+						<td>{$vo.evaluate_self_info_profession}</td>
+						<td>{$vo.evaluate_self_info_department}</td>
+						<td>{$vo.evaluate_self_info_team}</td>
+						<td>{$vo.evaluate_self_info_employee_name}</td>
+						<td>{$vo.evaluate_self_info_employee_id}</td>
+						<td>{$vo.evaluate_self_info_post}</td>
+						<td>{$vo.evaluate_self_info_score}</td>
+						<td>{$vo.evaluate_self_info_ranking}</td>
+						<td>{$vo.evaluate_self_info_grade}</td>
+						<td>{$vo.evaluate_self_info_year}</td>
+						<td>{$vo.evaluate_self_info_month}</td>
+						<td>{$vo.evaluate_self_info_tips}</td>
+						<td nowrap="nowrap" ><a href ="#"  class="btn btn-danger btn-lg" onclick="return delSingle({$vo.evaluate_self_info_employee_id},{$vo.evaluate_self_info_year},{$vo.evaluate_self_info_month});"><span class="icon-edit"></span>删除</a></td>
+					</tr>
+				{/volist}
+			</tbody>
+		</table>
+	</body>
+</html>
+<script>
+function reflashMain()
+{
+	var data = {
+			year:$('#selectYearList').val(),
+			month:$('#selectMonthList').val(),
+			department:$('#selectDepartmentList').val(),
+			team:$('#selectTeamList').val(),
+			userName : $('#userName').val(),
+			userID : $('#userID').val()
+	};
+	$.ajax({
+		type : 'post',
+		data : data,
+		url : '/index/Evaluate/selfInfoRecordSearch',
+		cache : false,
+		success : function(msg) {
+				$('#content').empty();
+				$('#content').html(msg);
+		}
+	});
+}
+
+function delSingle(userID,year,month)
+{
+	var data = {
+			userID : userID,
+			year : year,
+			month : month
+		};
+	$.ajax({
+		type : 'post',
+		data : data,
+		url : '/index/Evaluate/selfInfoRecordDelete',
+		cache : false,
+		success : function(msg) {
+			if(msg)
+			{
+				reflashMain();
+			}
+			else{
+				alert("删除失败！！");
+			}
+		}
+	});
+};
+
+
+</script>
